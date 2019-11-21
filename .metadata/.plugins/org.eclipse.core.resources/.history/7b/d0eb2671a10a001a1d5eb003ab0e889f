@@ -1,0 +1,10 @@
+package me.brook.PokemonWild.graphics;
+
+public class Recorder {
+
+	public void addImage(PokeWindow pokeWindow) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

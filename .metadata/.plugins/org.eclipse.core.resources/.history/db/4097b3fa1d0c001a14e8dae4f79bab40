@@ -1,0 +1,68 @@
+package me.brook.PokemonCreator;
+
+import java.io.IOException;
+
+import javax.swing.JFrame;
+
+import me.brook.PokemonCreator.graphics.PokeDrawer;
+import me.brook.PokemonCreator.graphics.PokeWindow;
+import me.brook.PokemonCreator.input.MouseInput;
+import me.brook.PokemonCreator.input.PokeMaker;
+import me.brook.PokemonCreator.world.PokeWorld;
+import me.brook.PokemonCreator.world.tile.TileType;
+
+public class PokemonCreator implements Runnable {
+
+	private JFrame frame;
+	private MouseInput draw1erInput;
+
+	private PokeMaker maker;
+	private PokeWorld world;
+	private PokeWindow window;
+	private PokeDrawer drawer;
+
+	public PokemonCreator() throws IOException {
+		TileType.loadTileData();
+		world = new PokeWorld(this);
+		maker = new PokeMaker(this);
+		window = new PokeWindow(this);
+	}
+
+	@Override
+	public void run() {
+
+		long lastUpdate = System.currentTimeMillis();
+		while(true) {
+
+			if(lastUpdate + 30 <= System.currentTimeMillis()) {
+				maker.tick();
+				world.tick();
+
+				// Rendering
+				window.drawWorld(world);
+				window.drawImage();
+				
+				lastUpdate = System.currentTimeMillis();
+			}
+
+		}
+
+	}
+
+	public MouseInput getD1rawerInput() {
+		return drawerInput;
+	}
+
+	public PokeWindow getWindow() {
+		return window;
+	}
+
+	public PokeWorld getWorld() {
+		return world;
+	}
+	
+	public PokeMaker getMaker() {
+		return maker;
+	}
+
+}

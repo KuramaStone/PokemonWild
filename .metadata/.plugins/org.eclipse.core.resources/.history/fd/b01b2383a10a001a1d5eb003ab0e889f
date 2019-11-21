@@ -1,0 +1,23 @@
+package me.brook.PokemonWild.graphics;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Recorder {
+	
+	private List<BufferedImage> images;
+	
+	public Recorder() {
+		images = new ArrayList<>();
+	}
+	
+	public void saveImages() {
+		
+	}
+
+	public void addImage(BufferedImage buffer) {
+		images.add(buffer);
+	}
+
+}

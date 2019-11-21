@@ -1,0 +1,75 @@
+package me.brook.PokemonCreator.graphics;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+
+/*
+ * This class deals with the JFrame
+ */
+public class PokeWindow extends JFrame {
+
+	public static final int SIZE = 720;
+	private static final long serialVersionUID = -887579245455944705L;
+
+	// Constructor
+	private PokemonCreator creator;
+
+	// Misc
+	private PokeDrawer drawer;
+	private InputHandler input;
+
+	public PokeWindow(PokemonCreator creator) {
+		this.creator = creator;
+		drawer = creator.getDrawer();
+		try {
+			createWindow();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void createWindow() throws IOException {
+		this.setTitle("Pokemon Wild");
+		this.setSize(PokeWindow.SIZE + 360, PokeWindow.SIZE + 30);
+		this.setResizable(false);
+		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		input = new InputHandler(drawer);
+
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		drawer.setPreferredSize(new Dimension(SIZE, SIZE));
+		JPanel options = creator.getMaker().addComponents(gbc);
+
+		JPanel north = new JPanel();
+		north.add(options, BorderLayout.NORTH);
+
+		this.add(north, BorderLayout.WEST);
+		this.add(drawer, BorderLayout.EAST);
+		
+		this.setVisible(true);
+	}
+	
+	public InputHandler getMouseInput() {
+		return input;
+	}
+
+}

@@ -1,0 +1,32 @@
+package me.brook.PokemonWild.graphics.record;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import me.brook.PokemonWild.PokemonWild;
+
+public class Recorder {
+	
+	private static final File parent = new File("C:\\Users\\Stone\\PokemonWild\\recording");
+	
+	private List<BufferedImage> images;
+	
+	public Recorder() {
+		images = new ArrayList<>();
+	}
+	
+	public void saveImages() {
+		GifSequenceWriter writer = new GifSequenceWriter(outputStream, BufferedImage.TYPE_INT_RGB, 1000 / PokemonWild.FPS, loopContinuously)
+		
+		images.clear();
+	}
+
+	public void addImage(BufferedImage buffer) {
+		images.add(buffer);
+	}
+
+}

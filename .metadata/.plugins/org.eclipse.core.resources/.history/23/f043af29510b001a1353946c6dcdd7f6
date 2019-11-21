@@ -1,0 +1,40 @@
+package me.brook.PokemonCreator;
+
+import javax.swing.JFrame;
+
+import me.brook.PokemonCreator.graphics.PokeWindow;
+import me.brook.PokemonCreator.input.MouseInput;
+import me.brook.PokemonCreator.world.PokeWorld;
+
+public class PokemonCreator implements Runnable {
+
+	private JFrame frame;
+	private MouseInput input;
+
+	private PokeWorld world;
+	private PokeWindow window;
+
+	public PokemonCreator() {
+		world = new PokeWorld(this);
+		window = new PokeWindow(this);
+	}
+
+	@Override
+	public void run() {
+
+		while(true) {
+			world.tick();
+
+			// Rendering
+			window.drawWorld(world);
+			window.drawImage();
+
+		}
+
+	}
+
+	public MouseInput getInput() {
+		return input;
+	}
+
+}

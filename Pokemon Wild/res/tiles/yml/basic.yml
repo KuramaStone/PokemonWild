@@ -1,0 +1,73 @@
+textures:
+  varied:
+    info:
+      file: basic.png
+    short_tree:
+      variants: 2
+      location:
+        top: 4,20
+      size:
+        width: 1
+        height: 3
+      collisions:
+        collidable: true 
+    tree:
+      variants: 2
+      location:
+        top: 0,20
+      size:
+        width: 2
+        height: 3
+      collisions:
+        collidable: true
+  1x1:
+    info:
+      file: basic.png
+    error:
+      collidable: true
+      variants: 1
+      location:
+        start: 31,0
+    grass:
+      variants: 5
+      location:
+        start: 0,0
+    tall_grass:
+      variants: 1
+      location:
+        start: 0,1
+        
+    red_flower:
+      animated: true
+      cycle: 30
+      variants: 5
+      location:
+        start: 0,2
+    orange_flower:
+      variants: 1
+      location:
+        start: 0,3
+    blue_flower:
+      variants: 1
+      location:
+        start: 0,4
+    yellow_flower:
+      variants: 1
+      location:
+        start: 0,5
+    small_bush:
+      collidable: true
+      variants: 4
+      location:
+        start: 0,6
+    long_bush:
+      collidable: true
+      variants: 3
+      location:
+        start: 0,7
+    grass_path:
+      variants: 1
+      location:
+        start: 0,8
+        end: 11,9   
+    

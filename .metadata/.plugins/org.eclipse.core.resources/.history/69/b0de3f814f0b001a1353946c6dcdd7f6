@@ -1,0 +1,33 @@
+package me.brook.PokemonCreator;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+
+public class PokemonCreator {
+
+	public static final int SIZE = 720;
+
+	private JFrame frame;
+	
+	public PokemonCreator() {
+		frame = new JFrame("Map creator");
+		frame.setTitle("Pokemon Wild");
+		frame.setSize(SIZE, SIZE);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.setVisible(true);
+		
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+	}
+
+	
+	
+}

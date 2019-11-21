@@ -1,0 +1,24 @@
+package me.brook.PokemonWild;
+
+public class Start {
+
+	public static void main(String[] args) {
+//		 PokemonWild wild = new PokemonWild();
+//		
+//		 Thread thread = new Thread(wild);
+//		 thread.start();
+	
+		int
+	}
+
+}
+
+
+public class Integer1 {
+	
+	int value;
+
+	public Integer1(int value) {
+		this.value = value;
+	}
+}

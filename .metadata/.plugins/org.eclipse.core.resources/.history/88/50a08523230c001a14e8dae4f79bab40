@@ -1,0 +1,50 @@
+package me.brook.PokemonCreator.input;
+
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class MouseInput extends MouseAdapter {
+
+	public Point mouse;
+	
+	private boolean isLeftClicked, isRightClicked;
+	
+	public MouseInput() {
+	}
+	
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		System.out.println(e.getPoint());
+		mouse = e.getPoint();
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if(e.getButton() == MouseEvent.BUTTON1) {
+			isLeftClicked = true;
+		}
+		else if(e.getButton() == MouseEvent.BUTTON2) {
+			isRightClicked = true;
+		}
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if(e.getButton() == MouseEvent.BUTTON1) {
+			isLeftClicked = false;
+		}
+		else if(e.getButton() == MouseEvent.BUTTON2) {
+			isRightClicked = false;
+		}
+	}
+	
+	public boolean isLeftClicked() {
+		return isLeftClicked;
+	}
+	
+	public boolean isRightClicked() {
+		return isRightClicked;
+	}
+	
+}

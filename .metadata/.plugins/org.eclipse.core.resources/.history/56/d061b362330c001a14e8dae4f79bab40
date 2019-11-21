@@ -1,0 +1,30 @@
+package me.brook.PokemonCreator.world.tile;
+
+public class TileData {
+
+	private TileType type;
+	private int variant;
+
+	public TileData(TileType type, int variant) {
+		this.type = type;
+		this.variant = variant;
+	}
+
+	public TileType getType() {
+		return type;
+	}
+
+	public int getVariant() {
+		return variant;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof TileData) {
+			TileData data = (TileData) obj;
+			return data.type == type && data.variant == variant;
+		}
+		
+		return false;
+	}
+}

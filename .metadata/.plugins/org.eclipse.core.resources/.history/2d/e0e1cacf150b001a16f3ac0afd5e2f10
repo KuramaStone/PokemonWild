@@ -1,0 +1,9 @@
+package me.brook.PokemonWild.world.tile;
+
+public abstract class Tile {
+	
+	private int x, y;
+	
+	private TileType type;
+
+}

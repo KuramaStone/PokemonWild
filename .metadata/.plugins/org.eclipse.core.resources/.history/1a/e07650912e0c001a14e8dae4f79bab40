@@ -1,0 +1,102 @@
+package me.brook.PokemonCreator.input;
+
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+
+import me.brook.PokemonCreator.world.tile.TileData;
+import me.brook.PokemonCreator.world.tile.TileType;
+
+public class TileScroller extends JPanel {
+	
+	private static final long serialVersionUID = 2040291925460760780L;
+	
+	private PokeMaker maker;
+	
+	private List<TileToggle> tiles;
+	
+	public TileScroller(PokeMaker maker) {
+		this.maker = maker;
+		addTiles();
+	}
+	
+	private void addTiles() {
+		tiles = new ArrayList<>();
+
+		int columns = 5;
+		int total = 0;
+		for(TileType type : TileType.values()) {
+			total += type.isAnimated() ? 1 : type.getImages().length;
+		}
+		int rows = total / columns;
+
+		GridLayout grid = new GridLayout(rows, columns, 0, 2);
+		this.setLayout(grid);
+
+		for(TileType type : TileType.values()) {
+			for(int variant = 0; variant < (type.isAnimated() ? 1 : type.getImages().length); variant++) {
+				BufferedImage image = type.getImages()[variant];
+				TileData data = new TileData(type, variant);
+				
+				JToggleButton icon = new JToggleButton(new ImageIcon(image));
+				icon.setSelected(maker.getCurrentTileData().getType() == type &&
+						maker.getCurrentTileData().getVariant() == variant);
+				icon.addActionListener(getTileChanger(data));
+				icon.setFocusable(false);
+				icon.setSize(new Dimension(image.getWidth(), image.getHeight()));
+				
+				this.add(icon);
+				tiles.add(new TileToggle(icon, data));
+			}
+		}
+	}
+	
+	private ActionListener getTileChanger(TileData data) {
+		return new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				unSelectOtherTiles(data);
+				TileScroller.this.maker.setCurrentType(data);
+			}
+		};
+	}
+	
+	private void unSelectOtherTiles(TileData data) {
+		for(Component comp : getComponents()) {
+			if(comp instanceof JToggleButton) {
+				((JToggleButton) comp).setSelected(false);
+			}
+		}
+	}
+
+	private static class TileToggle {
+		
+		private JToggleButton button;
+		private TileData data;
+		
+		public TileToggle(JToggleButton button, TileData data) {
+			this.button = button;
+			this.data = data;
+		}
+
+		public JToggleButton getButton() {
+			return button;
+		}
+
+		public TileData getData() {
+			return data;
+		}
+		
+	}
+	
+}

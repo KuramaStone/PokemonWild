@@ -1,0 +1,5 @@
+INDEX VERSION 1.130+C:\Users\Stone\PokemonWild\.metadata\.plugins\org.eclipse.jdt.core
+583764407.index
+193217920.index
+3587409314.index
+4069116992.index

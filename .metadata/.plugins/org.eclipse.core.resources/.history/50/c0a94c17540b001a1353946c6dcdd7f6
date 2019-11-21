@@ -1,0 +1,103 @@
+package me.brook.PokemonCreator.graphics;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JComponent;
+
+import me.brook.PokemonCreator.world.PokeWorld;
+import me.brook.PokemonCreator.world.area.PokeArea;
+import me.brook.PokemonCreator.world.tile.Tile;
+
+public class PokeDrawer extends JComponent {
+
+	private PokeWindow window;
+
+	private int size = 512;
+	private boolean highlightTiles = false;
+	private BufferedImage buffer;
+
+	private int xOffset, yOffset;
+
+	public PokeDrawer(PokeWindow pokeWindow) {
+		this.window = pokeWindow;
+		buffer = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+	}
+
+	/*
+	 * Draw the areas
+	 */
+	public void drawWorld(PokeWorld world) {
+
+		for(PokeArea area : world.getAreas()) {
+
+			int offsetX = area.getOffsetX() * getTileSize() + xOffset;
+			int offsetY = area.getOffsetY() * getTileSize() + yOffset;
+
+			int width = area.getWidth();
+
+			Tile[] tiles = area.getTiles();
+			for(int i = 0; i < tiles.length; i++) {
+				Tile tile = tiles[i];
+
+				int x = (i % width) * getTileSize();
+				int y = (i / width) * getTileSize();
+
+				int tx = x + offsetX;
+				int ty = y + offsetY;
+				drawTile(tx, ty, tile);
+			}
+
+		}
+		// for(int i = 0; i < inventory.getInventory().size(); i++) {
+		// drawTile(0, 0, i);
+		// }
+
+	}
+
+	private void drawTile(int tx, int ty, Tile tile) {
+		Graphics g = buffer.getGraphics();
+		BufferedImage image = tile.getCurrentImage();
+
+		g.drawImage(image, tx, ty, getTileSize(), getTileSize(), null);
+
+		if(highlightTiles) {
+			g.setColor(Color.RED);
+			g.drawRect(tx, ty, getTileSize(), getTileSize());
+		}
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		g.drawImage(buffer, 360, 0, size, size,
+				null);
+
+		buffer = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+	}
+
+	private int getTileSize() {
+		return size / 15; // 15x15 tiles per screen
+	}
+
+	public boolean highlightTiles() {
+		return highlightTiles;
+	}
+
+	public void addXOffset(int offset) {
+		xOffset += offset;
+	}
+
+	public void addYOffset(int offset) {
+		yOffset += offset;
+	}
+
+	public int getxOffset() {
+		return xOffset;
+	}
+
+	public int getyOffset() {
+		return yOffset;
+	}
+
+}

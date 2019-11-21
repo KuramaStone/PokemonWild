@@ -1,0 +1,50 @@
+package me.brook.PokemonCreator.world;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.world.area.PokeArea;
+
+/*
+ * This class will deal with the player's location in the world, the areas visible, and the animation cycles involved.
+ * 
+ * Some areas connect to multiple others. An example of this is Route 1 connecting Pallet Town and Viridian City without any map transitions.
+ */
+public class PokeWorld {
+
+	// Constructor
+	private PokemonCreator wild;
+	
+	private List<PokeArea> areas;
+	
+	public PokeWorld(PokemonCreator wild) {
+		this.wild = wild;
+		areas = new ArrayList<>();
+	}
+
+	public void tick() {
+		
+	}
+
+	/*
+	 * Getters and setters
+	 */
+	
+	public void setAreas(List<PokeArea> areas) {
+		this.areas = areas;
+	}
+	
+	public void addArea(PokeArea area) {
+		this.areas.add(area);
+	}
+	
+	public void removeArea(PokeArea area) {
+		this.areas.remove(area);
+	}
+	
+	public List<PokeArea> getAreas() {
+		return areas;
+	}
+
+}

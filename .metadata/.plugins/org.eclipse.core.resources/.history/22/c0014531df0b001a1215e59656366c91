@@ -1,0 +1,54 @@
+package me.brook.PokemonCreator.input;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.graphics.PokeWindow;
+import me.brook.PokemonCreator.world.PokeWorld;
+import me.brook.PokemonCreator.world.area.PokeArea;
+import me.brook.PokemonCreator.world.tile.Tile;
+import me.brook.PokemonCreator.world.tile.TileType;
+
+public class PokeMaker {
+	
+	private PokemonCreator creator;
+	private PokeWorld world;
+	private PokeWindow window;
+	private MouseInput input;
+	
+	public PokeMaker(PokemonCreator creator) {
+		this.creator = creator;
+		
+		world = creator.getWorld();
+		window = creator.getWindow();
+		input = creator.getInput();
+		
+		addComponents();
+	}
+
+	public void tick() {
+		
+	}
+
+	public void addComponents() {
+	}
+	
+	private final ActionListener addAreaAction = new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			List<Tile> tiles = new ArrayList<>();
+			PokeArea area = new PokeArea(0, 0, tiles);
+
+			area.addTile(new Tile(1, 1, TileType.GRASS));
+			area.addTile(new Tile(1, 2, TileType.TALL_GRASS));
+			area.addTile(new Tile(1, 3, TileType.FLOWER));
+			world.addArea(area);
+		}
+	};
+	
+
+}

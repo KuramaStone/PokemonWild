@@ -1,0 +1,40 @@
+package me.brook.PokemonCreator.input;
+
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.world.tile.TileType;
+
+public class TileScroller extends JPanel {
+
+	private TileType current;
+	private MouseInput input;
+
+	public TileScroller(PokemonCreator creator) {
+		input = creator.getInput();
+
+		addTiles();
+	}
+
+	private void addTiles() {
+
+		this.setLayout(new GridLayout(10, 4));
+
+		for(TileType type : TileType.values()) {
+			for(int j = 0; j < type.getImages().length; j++) {
+				BufferedImage image = type.getImages()[j];
+				JButton icon = new JButton(new ImageIcon(image));
+				this.add(icon);
+				icon.setSize(new Dimension(image.getWidth(), image.getHeight()));
+			}
+		}
+
+	}
+
+}

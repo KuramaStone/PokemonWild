@@ -1,0 +1,36 @@
+package me.brook.PokemonCreator.input;
+
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class MouseInput extends MouseAdapter {
+
+	public Point mouse;
+	
+	private boolean isClicked;
+	
+	public MouseInput() {
+	}
+	
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		System.out.println(e.getPoint());
+		mouse = e.getPoint();
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		isClicked = true;
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		isClicked = false;
+	}
+	
+	public boolean isClicked() {
+		return isClicked;
+	}
+	
+}

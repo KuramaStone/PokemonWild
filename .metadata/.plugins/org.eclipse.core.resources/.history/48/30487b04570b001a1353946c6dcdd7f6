@@ -1,0 +1,9 @@
+package me.brook.PokemonCreator.world.tile;
+
+public class NormalTile extends Tile{
+
+	public NormalTile(int x, int y, TileType type) {
+		super(x, y, type);
+	}
+
+}
