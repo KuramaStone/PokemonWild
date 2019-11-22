@@ -5,10 +5,13 @@ import java.awt.image.BufferedImage;
 
 public class Tile {
 	
-	private int x, y;
-	private int width, height;
+	public int x, y;
+	public int width, height;
 	
-	private TileData data;
+	public TileData data;
+	
+	public Tile() {
+	}
 
 	public Tile(int x, int y, TileData data) {
 		this.x = x;

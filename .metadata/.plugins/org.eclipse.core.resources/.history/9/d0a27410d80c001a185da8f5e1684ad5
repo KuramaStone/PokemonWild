@@ -1,0 +1,13 @@
+package me.brook.PokemonCreator.toolbox;
+
+import java.awt.Color;
+
+public class Tools {
+
+	public static Color getUniqueColor(long seed) {
+		int hue =
+		
+		return Color.getHSBColor(hue, saturation, brightness);
+	}
+
+}

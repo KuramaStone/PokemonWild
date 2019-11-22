@@ -1,0 +1,25 @@
+package me.brook.PokemonCreator.graphics.style;
+
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JComponent;
+
+import me.brook.PokemonCreator.world.tile.TileData;
+
+public class ToggleTile extends ToggleIcon {
+
+	public ToggleTile(BufferedImage image) {
+		super(image);
+	}
+
+
+	private TileData data;
+
+
+	@Override
+	public void paint(Graphics g, JComponent c) {
+		super.paint(g, c);
+	}
+
+}

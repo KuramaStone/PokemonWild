@@ -6,9 +6,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
-import me.brook.PokemonCreator.world.yaml.Configuration;
+import me.brook.PokemonCreator.toolbox.Tools;
+import me.brook.PokemonCreator.world.yaml.ConfigReader;
 
 public enum TileType {
 
@@ -30,12 +29,11 @@ public enum TileType {
 	private int ticks = 0;
 
 	public static void loadTileData() throws IOException {
-		Configuration config = new Configuration(
+		ConfigReader config = new ConfigReader(
 				new File("C:\\Users\\Stone\\PokemonWild\\Pokemon Wild\\res\\tiles\\yml\\basic.yml"));
 
 		// Load 1x1
-		BufferedImage sheet = ImageIO.read(new File(
-				"C:\\Users\\Stone\\PokemonWild\\Pokemon Wild\\res\\tiles\\" + config.get("textures.1x1.info.file")));
+		BufferedImage sheet = Tools.readImage("res\\tiles\\" + config.get("textures.1x1.info.file"));
 
 		for(Object obj : config.getKeys("textures.1x1")) {
 			String str = obj.toString();
@@ -55,7 +53,7 @@ public enum TileType {
 
 	}
 
-	private void loadVariedTile(Configuration config, BufferedImage sheet) {
+	private void loadVariedTile(ConfigReader config, BufferedImage sheet) {
 		String name = this.toString().toLowerCase();
 		config.setSection("textures.varied." + name);
 
@@ -89,7 +87,7 @@ public enum TileType {
 		}
 	}
 
-	private void loadBasicTile(Configuration config, BufferedImage sheet) {
+	private void loadBasicTile(ConfigReader config, BufferedImage sheet) {
 		// We load the tile data now from the basic.yml
 		String name = this.toString().toLowerCase();
 		int size = 16;
@@ -117,9 +115,6 @@ public enum TileType {
 				int tx = (start.x + i) * 16;
 				int ty = (start.y) * 16;
 				try {
-					if(this == TileType.RED_FLOWER) {
-						System.out.println(String.format("%s %s, %sx%s", tx, ty, width * 16, height * 16));
-					}
 					images[i] = sheet.getSubimage(tx, ty, width * 16, height * 16);
 				}
 				catch(Exception e) {

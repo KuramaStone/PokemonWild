@@ -1,0 +1,12 @@
+package me.brook.PokemonCreator.world.yaml;
+
+import java.util.Map;
+
+public class ConfigWriter {
+	
+	private Map<Object, Object> map;
+	
+	public ConfigWriter() {
+	}
+
+}

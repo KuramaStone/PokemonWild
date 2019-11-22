@@ -11,7 +11,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-import me.brook.PokemonCreator.graphics.style.ToggleButtonDesign;
+import me.brook.PokemonCreator.graphics.style.ToggleTile;
 import me.brook.PokemonCreator.world.tile.TileData;
 import me.brook.PokemonCreator.world.tile.TileType;
 
@@ -47,7 +47,7 @@ public class TileScroller extends JPanel {
 				TileData data = new TileData(type, variant);
 
 				JToggleButton icon = new JToggleButton();
-				icon.setUI(new ToggleButtonDesign(data));
+				icon.setUI(new ToggleTile(data));
 				icon.setSelected(maker.getCurrentTileData().getType() == type &&
 						maker.getCurrentTileData().getVariant() == variant);
 				icon.addActionListener(getTileChanger(data));

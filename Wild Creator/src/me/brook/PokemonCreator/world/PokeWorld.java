@@ -16,11 +16,12 @@ public class PokeWorld {
 
 	private PokemonCreator creator;
 	
-	private List<PokeArea> areas;
+	private PokeConnection connections;
 
 	public PokeWorld(PokemonCreator creator) {
 		this.creator = creator;
-		areas = new ArrayList<>();
+		
+		connections = new PokeConnection(new ArrayList<>());
 	}
 
 	public void tick() {
@@ -38,24 +39,52 @@ public class PokeWorld {
 		creator.getMaker().getTileScroller().repaint();
 	}
 
+	public boolean isAreaNameTaken(String areaName) {
+		for(PokeArea area : connections.getAreas()) {
+			if(area.getAreaName().equalsIgnoreCase(areaName)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	/*
 	 * Getters and setters
 	 */
 
 	public void setAreas(List<PokeArea> areas) {
-		this.areas = areas;
+		this.connections.setAreas(areas);
 	}
 
 	public void addArea(PokeArea area) {
-		this.areas.add(area);
+		this.connections.getAreas().add(area);
+		creator.getMaker().updateAreaSelector();
 	}
 
 	public void removeArea(PokeArea area) {
-		this.areas.remove(area);
+		this.connections.getAreas().remove(area);
+		creator.getMaker().updateAreaSelector();
 	}
 
 	public List<PokeArea> getAreas() {
-		return areas;
+		return connections.getAreas();
+	}
+	
+	public PokeConnection getConnections() {
+		return connections;
+	}
+	
+	public void setConnections(PokeConnection connections) {
+		this.connections = connections;
+		creator.getMaker().updateAreaSelector();
+	}
+
+	/*
+	 * We'll test for this by just checking if the file already exists 
+	 */
+	public boolean isConnectionNameTaken(String name) {
+		return connections.doesConnectionsExist(creator.getSettings(), name);
 	}
 
 }

@@ -1,13 +1,17 @@
 package me.brook.PokemonCreator.graphics;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.tool.PaintTool;
 import me.brook.PokemonCreator.world.PokeWorld;
 import me.brook.PokemonCreator.world.area.PokeArea;
 import me.brook.PokemonCreator.world.tile.Tile;
@@ -16,17 +20,29 @@ public class PokeDrawer extends JPanel {
 
 	private static final long serialVersionUID = 604046713316255320L;
 
+	private PokemonCreator creator;
+	
 	private boolean highlightTiles = false;
-	private boolean showHitboxes = true;
+	private boolean showHitboxes = false;
+	private boolean highlightAreas = true;
+
+	private int size;
 	private BufferedImage buffer;
 
 	private int xOffset, yOffset;
 	private boolean updateBuffer = true;
+	private double zoom = 1.0;
 
-	public PokeDrawer(int size) {
+	public PokeDrawer(PokemonCreator creator, int size) {
+		this.creator = creator;
+		this.size = size;
 		buffer = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
 
 		this.setFocusable(true);
+	}
+
+	public void drawTool(PaintTool currentTool) {
+		currentTool.draw(buffer.getGraphics());
 	}
 
 	@Override
@@ -36,6 +52,10 @@ public class PokeDrawer extends JPanel {
 				null);
 	}
 
+	public void clear() {
+		buffer = new BufferedImage(buffer.getWidth(), buffer.getHeight(), BufferedImage.TYPE_INT_RGB);
+	}
+
 	/*
 	 * Draw the areas
 	 */
@@ -43,12 +63,15 @@ public class PokeDrawer extends JPanel {
 		if(!updateBuffer) {
 			return;
 		}
-		buffer = new BufferedImage(getWidth(), getWidth(), BufferedImage.TYPE_INT_RGB);
 
+		Graphics2D g = (Graphics2D) buffer.getGraphics();
 		for(PokeArea area : world.getAreas()) {
+			if(area == null) {
+				continue;
+			}
 
-			int offsetX = area.getOffsetX() * getTileSize() + xOffset;
-			int offsetY = area.getOffsetY() * getTileSize() + yOffset;
+			int offsetX = xOffset * getTileSize();
+			int offsetY = yOffset * getTileSize();
 
 			for(Tile tile : area.getTiles()) {
 
@@ -62,6 +85,27 @@ public class PokeDrawer extends JPanel {
 				// getTileSize() / 2, ty + getTileSize() / 2);
 			}
 
+			if(highlightAreas) {
+				Rectangle surface = area.getAreaSurface();
+				if(surface != null) {
+					g.setColor(area.getColor());
+
+					int x = surface.x;
+					int y = surface.y;
+					int w = surface.width;
+					int h = surface.height;
+
+					x = (x + xOffset) * getTileSize();
+					y = (y + yOffset) * getTileSize();
+					w = (w + xOffset + 1) * getTileSize();
+					h = (h + yOffset + 1) * getTileSize();
+					w -= x;
+					h -= y;
+
+					g.setStroke(new BasicStroke(area == creator.getMaker().getCurrentArea() ? 5f : 2f));
+					g.drawRect(x, y, w, h);
+				}
+			}
 		}
 
 	}
@@ -79,7 +123,7 @@ public class PokeDrawer extends JPanel {
 		}
 
 		if(showHitboxes) {
-			g.setColor(new Color(255, 0, 0, 100));
+			g.setColor(new Color(255, 0, 0, 64));
 			Rectangle rect = tile.getType().getCollidingArea();
 			if(rect != null) {
 				g.fillRect(tx, ty - (int) ((rect.getHeight() - 1) * getTileSize()),
@@ -88,17 +132,26 @@ public class PokeDrawer extends JPanel {
 		}
 	}
 
+	/**
+	 * 
+	 * @param point
+	 *            Mouse position in pixels relative to this panel
+	 * @return Tile mouse position is over
+	 */
 	public Point getTileLocationAt(Point point) {
-		int x = point.x + xOffset;
-		int y = point.y + yOffset;
-		x /= getTileSize();
-		y /= getTileSize();
+		// get raw x and tiles without any offset adjustment
+		int x = point.x / getTileSize();
+		int y = point.y / getTileSize();
+
+		// subtract offsets
+		x += -xOffset;
+		y += -yOffset;
 
 		return new Point(x, y);
 	}
 
-	private int getTileSize() {
-		return getWidth() / 15; // 15x15 tiles per screen
+	public int getTileSize() {
+		return (int) Math.max(1, size / 15 * zoom); // 15x15 tiles per screen
 	}
 
 	public boolean highlightTiles() {
@@ -130,6 +183,16 @@ public class PokeDrawer extends JPanel {
 	public void setHighlightTiles(boolean highlightTiles) {
 		this.highlightTiles = highlightTiles;
 		updateBuffer = true;
+	}
+
+	public void addToZoom(double d) {
+		this.zoom += d;
+
+		this.zoom = Math.max(0, this.zoom);
+	}
+
+	public void resetZoom(double d) {
+		this.zoom = 1.0;
 	}
 
 }

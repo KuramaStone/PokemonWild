@@ -1,0 +1,5 @@
+package me.brook.PokemonCreator.input.tool;
+
+public class FillTool {
+
+}

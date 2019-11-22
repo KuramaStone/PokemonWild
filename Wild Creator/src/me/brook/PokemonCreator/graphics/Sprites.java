@@ -1,10 +1,8 @@
 package me.brook.PokemonCreator.graphics;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
+import me.brook.PokemonCreator.toolbox.Tools;
 
 public class Sprites {
 
@@ -23,22 +21,17 @@ public class Sprites {
 
 	private void loadPlayerSprites() {
 
-		try {
-			BufferedImage image = ImageIO.read(new File("res\\sprites\\PlayerM.png"));
-			for(int mode = 0; mode < 3; mode++) {
-				for(int direction = 0; direction < 4; direction++) {
-					playerWalk[mode][direction] = image.getSubimage(mode * 16, direction * 20, 16, 20);
-				}
-			}
-
-			for(int mode = 3; mode < 6; mode++) {
-				for(int direction = 0; direction < 4; direction++) {
-					playerRun[mode - 3][direction] = image.getSubimage(mode * 16, direction * 20, 16, 20);
-				}
+		BufferedImage image = Tools.readImage("res\\sprites\\PlayerM.png");
+		for(int mode = 0; mode < 3; mode++) {
+			for(int direction = 0; direction < 4; direction++) {
+				playerWalk[mode][direction] = image.getSubimage(mode * 16, direction * 20, 16, 20);
 			}
 		}
-		catch(IOException e) {
-			e.printStackTrace();
+
+		for(int mode = 3; mode < 6; mode++) {
+			for(int direction = 0; direction < 4; direction++) {
+				playerRun[mode - 3][direction] = image.getSubimage(mode * 16, direction * 20, 16, 20);
+			}
 		}
 	}
 

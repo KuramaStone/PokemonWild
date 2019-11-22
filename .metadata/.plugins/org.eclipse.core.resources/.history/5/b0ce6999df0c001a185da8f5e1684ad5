@@ -1,0 +1,13 @@
+package me.brook.PokemonCreator.input.tool;
+
+import me.brook.PokemonCreator.input.InputHandler;
+
+public class PencilTool extends PaintTool {
+
+	@Override
+	public void handleInput(InputHandler handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

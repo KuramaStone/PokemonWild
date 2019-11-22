@@ -1,0 +1,17 @@
+package me.brook.PokemonCreator.toolbox;
+
+import java.io.File;
+
+public class Settings {
+	
+	private File saveFolder;
+
+	public Settings(File saveFolder) {
+		this.saveFolder = saveFolder;
+	}
+
+	public File getSaveFolder() {
+		return saveFolder;
+	}
+
+}

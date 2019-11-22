@@ -1,0 +1,12 @@
+package me.brook.PokemonCreator.toolbox;
+
+import java.awt.Color;
+
+public class Tools {
+
+	public static Color getUniqueColor(long seed) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

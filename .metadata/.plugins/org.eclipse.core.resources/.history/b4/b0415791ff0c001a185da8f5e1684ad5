@@ -1,0 +1,63 @@
+package me.brook.PokemonCreator.world.yaml;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.esotericsoftware.yamlbeans.YamlWriter;
+
+public class ConfigWriter {
+
+	private File yamlFile;
+	private Map<Object, Object> map;
+
+	private String basePath = "";
+
+	public ConfigWriter(File yamlFile) {
+		this.yamlFile = yamlFile;
+		
+		map = new HashMap<>();
+	}
+
+	public void set(String path, Object obj) {
+		String[] split = ((basePath == null || basePath.isEmpty()) ? path : (basePath + "." + path)).split("\\.");
+
+		Map<Object, Object> last = new HashMap<>();
+		for(int i = split.length; i > 0; i--) {
+			String key = split[i - 1];
+			Object value = (i == split.length - 1) ? split[i] : obj;
+			
+			// Get map if it exists already, make it if not
+			Map<Object, Object> holder = new HashMap<>();
+
+			Map<Object, Object> parent = map;
+			for(int j = 0; j < i; j++) {
+				parent = (Map<Object, Object>) parent.get(split[j]);
+				if(parent == null) {
+					parent = holder;
+					break;
+				}
+			}
+
+			System.out.println(key + "=" + value);
+			parent.put(key, value);
+			last = parent;
+		}
+		map = last;
+
+		System.out.println(map);
+	}
+
+	public void save() {
+		try {
+			YamlWriter writer = new YamlWriter(new FileWriter(yamlFile));
+			writer.write(map);
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

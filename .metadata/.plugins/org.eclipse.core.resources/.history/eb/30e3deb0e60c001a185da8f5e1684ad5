@@ -1,0 +1,37 @@
+package me.brook.PokemonCreator.input.tool;
+
+import java.awt.Point;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+
+public class FillAreaTool extends PaintTool {
+	
+	public FillAreaTool(PokemonCreator creator) {
+		super(creator);
+	}
+
+	private Point pressStart;
+	private int clickType;
+
+	@Override
+	public void handleInput(InputHandler input) {
+		
+		Point mouse = drawer.getMousePosition();
+		
+		if(mouse == null) {
+			return;
+		}
+		
+		if(input.isLeftMousePressed() && pressStart == null) {
+			pressStart = mouse;
+			clickType = 1;
+		}
+		
+		if(input.isLeftMousePressed() && pressStart 1= null) {
+			
+		}
+		
+	}
+
+}

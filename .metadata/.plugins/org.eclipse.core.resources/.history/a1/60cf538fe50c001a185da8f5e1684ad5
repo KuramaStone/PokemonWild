@@ -1,0 +1,17 @@
+package me.brook.PokemonCreator.input.tool;
+
+import java.awt.Point;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+
+public class FillAreaTool extends PaintTool {
+	
+	private Point pressStart;
+
+	@Override
+	public void handleInput(PokemonCreator creator, InputHandler input) {
+		
+	}
+
+}

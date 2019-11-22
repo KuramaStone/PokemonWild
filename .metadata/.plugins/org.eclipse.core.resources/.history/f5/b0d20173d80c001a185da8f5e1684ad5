@@ -1,0 +1,16 @@
+package me.brook.PokemonCreator.toolbox;
+
+import java.awt.Color;
+import java.util.Random;
+
+public class Tools {
+
+	public static Color getUniqueColor(long seed) {
+		Random rnd = new Random(seed);
+		float hue = rnd.nextFloat() * 360;
+		float saturation = rnd.nextFloat();
+		
+		return Color.getHSBColor(hue, saturation, 0.8f);
+	}
+
+}

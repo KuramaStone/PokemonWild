@@ -1,0 +1,160 @@
+package me.brook.PokemonCreator.graphics;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JPanel;
+
+import me.brook.PokemonCreator.world.PokeWorld;
+import me.brook.PokemonCreator.world.area.PokeArea;
+import me.brook.PokemonCreator.world.tile.Tile;
+
+public class PokeDrawer extends JPanel {
+
+	private static final long serialVersionUID = 604046713316255320L;
+
+	private boolean highlightTiles = false;
+	private boolean showHitboxes = false;
+	private boolean highlightAreas = true;
+
+	private BufferedImage buffer;
+
+	private int xOffset, yOffset;
+	private boolean updateBuffer = true;
+	private double zoom = 1.0;
+
+	public PokeDrawer(int size) {
+		buffer = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+
+		this.setFocusable(true);
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(buffer, 0, 0, buffer.getWidth(), buffer.getHeight(),
+				null);
+	}
+
+	/*
+	 * Draw the areas
+	 */
+	public void drawWorld(PokeWorld world) {
+		if(!updateBuffer) {
+			return;
+		}
+		buffer = new BufferedImage(getWidth(), getWidth(), BufferedImage.TYPE_INT_RGB);
+
+		Graphics g = buffer.getGraphics();
+		for(PokeArea area : world.getAreas()) {
+
+			int offsetX = xOffset * getTileSize();
+			int offsetY = yOffset * getTileSize();
+
+			for(Tile tile : area.getTiles()) {
+
+				int x = tile.getX() * getTileSize();
+				int y = tile.getY() * getTileSize();
+
+				int tx = x + offsetX;
+				int ty = y + offsetY;
+				drawTile(tx, ty, tile);
+				// g.drawString(String.valueOf(tile.getX() + "," + tile.getY()), tx +
+				// getTileSize() / 2, ty + getTileSize() / 2);
+			}
+
+			if(highlightAreas) {
+				Rectangle surface = area.getAreaSurface();
+				g.setColor(area.getColor());
+
+				int x = surface.x * getTileSize();
+				int y = surface.y;
+				int w = surface.width;
+				int h = surface.height;
+				
+				g.drawRect(x, y, w, h);
+			}
+		}
+
+	}
+
+	private void drawTile(int tx, int ty, Tile tile) {
+		Graphics g = buffer.getGraphics();
+		BufferedImage image = tile.getCurrentImage();
+
+		g.drawImage(image, tx, ty - getTileSize() * (tile.getHeight() - 1),
+				getTileSize() * tile.getWidth(), getTileSize() * (tile.getHeight()), null);
+
+		if(highlightTiles) {
+			g.setColor(Color.RED);
+			g.drawRect(tx, ty, getTileSize() * tile.getWidth(), getTileSize() * tile.getHeight());
+		}
+
+		if(showHitboxes) {
+			g.setColor(new Color(255, 0, 0, 64));
+			Rectangle rect = tile.getType().getCollidingArea();
+			if(rect != null) {
+				g.fillRect(tx, ty - (int) ((rect.getHeight() - 1) * getTileSize()),
+						(int) (rect.getWidth() * getTileSize()), (int) (rect.getHeight() * getTileSize()));
+			}
+		}
+	}
+
+	public Point getTileLocationAt(Point point) {
+		int x = point.x + xOffset;
+		int y = point.y + yOffset;
+		x /= getTileSize();
+		y /= getTileSize();
+
+		return new Point(x, y);
+	}
+
+	private int getTileSize() {
+		return (int) Math.max(1, getWidth() / 15 * zoom); // 15x15 tiles per screen
+	}
+
+	public boolean highlightTiles() {
+		return highlightTiles;
+	}
+
+	public void addXOffset(int offset) {
+		xOffset += offset;
+		updateBuffer = true;
+	}
+
+	public void addYOffset(int offset) {
+		yOffset += offset;
+		updateBuffer = true;
+	}
+
+	public int getxOffset() {
+		return xOffset;
+	}
+
+	public int getyOffset() {
+		return yOffset;
+	}
+
+	public boolean shouldHighlightTiles() {
+		return highlightTiles;
+	}
+
+	public void setHighlightTiles(boolean highlightTiles) {
+		this.highlightTiles = highlightTiles;
+		updateBuffer = true;
+	}
+
+	public void addToZoom(double d) {
+		this.zoom += d;
+
+		this.zoom = Math.max(0, this.zoom);
+	}
+
+	public void resetZoom(double d) {
+		this.zoom = 1.0;
+	}
+
+}

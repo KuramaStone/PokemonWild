@@ -1,0 +1,50 @@
+package me.brook.PokemonCreator.input.tool;
+
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+import me.brook.PokemonCreator.world.tile.Tile;
+
+public class FillAreaTool extends PaintTool {
+	
+	public FillAreaTool(PokemonCreator creator) {
+		super(creator);
+	}
+
+	private Point pressStart;
+	private int clickType;
+
+	@Override
+	public void handleInput(InputHandler input) {
+		
+		Point mouse = drawer.getMousePosition();
+		
+		if(mouse == null) {
+			return;
+		}
+		
+		if(input.isLeftMousePressed() && pressStart == null) {
+			pressStart = mouse;
+			clickType = 1;
+		}
+		
+		if(input.isLeftMousePressed() && pressStart != null) {
+			
+			// Get all tiles the two points
+			List<Tile> points = new ArrayList<>();
+
+			// Get top left and bottom right corners
+			Point start = new Point(), end = new Point();
+			
+			if(pressStart.x < mouse.x) {
+				start.x = pressStart.x;
+			}
+			
+		}
+		
+	}
+
+}

@@ -1,0 +1,21 @@
+package me.brook.PokemonCreator.toolbox;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.Random;
+
+public class Tools {
+
+	public static Color getUniqueColor(long seed) {
+		Random rnd = new Random(seed);
+		float hue = rnd.nextFloat() * 360;
+		float saturation = 0.5f + rnd.nextFloat() * 0.5f;
+		
+		return Color.getHSBColor(hue, saturation, 1.0f);
+	}
+
+	public static BufferedImage readImage(String string) {
+		return null;
+	}
+
+}

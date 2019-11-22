@@ -1,0 +1,7 @@
+package me.brook.PokemonCreator.input.tool;
+
+public abstract class PaintTool {
+
+	
+	
+}

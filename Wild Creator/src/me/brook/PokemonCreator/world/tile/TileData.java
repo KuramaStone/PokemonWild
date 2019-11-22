@@ -4,8 +4,11 @@ import java.awt.image.BufferedImage;
 
 public class TileData {
 
-	private TileType type;
-	private int variant;
+	public TileType type;
+	public int variant;
+	
+	public TileData() {
+	}
 
 	public TileData(TileType type, int variant) {
 		this.type = type;

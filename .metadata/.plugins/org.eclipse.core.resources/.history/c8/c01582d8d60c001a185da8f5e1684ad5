@@ -1,0 +1,48 @@
+package me.brook.PokemonCreator.world.area;
+
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.List;
+
+import me.brook.PokemonCreator.world.tile.Tile;
+
+/*
+ * This is a single area alone. For multiple routes joining, look at PokeWorld
+ */
+public class PokeArea {
+
+	private String areaName;
+	private List<Tile> tiles;
+
+	public PokeArea(String name, List<Tile> tiles) {
+		this.tiles = tiles;
+	}
+	
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public List<Tile> getTiles() {
+		return tiles;
+	}
+	
+	public Rectangle getAreaSurface() {
+		Rectangle area = new Rectangle();
+		
+	}
+
+	public void addTile(Tile tile) {
+		tiles.add(tile);
+	}
+
+	public Tile getTileAt(Point p) {
+		for(Tile tile : tiles) {
+			if(tile.isLocationAt(p)) {
+				return tile;
+			}
+		}
+
+		return null;
+	}
+
+}

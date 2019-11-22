@@ -1,0 +1,17 @@
+package me.brook.PokemonCreator.input.tool;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.graphics.PokeDrawer;
+import me.brook.PokemonCreator.input.InputHandler;
+import me.brook.PokemonCreator.input.PokeMaker;
+import me.brook.PokemonCreator.world.PokeWorld;
+
+public abstract class PaintTool {
+	
+	PokeDrawer drawer = creator.getDrawer();
+	PokeWorld world = creator.getWorld();
+	PokeMaker maker = creator.getMaker();
+
+	public abstract void handleInput(PokemonCreator creator, InputHandler input);
+	
+}

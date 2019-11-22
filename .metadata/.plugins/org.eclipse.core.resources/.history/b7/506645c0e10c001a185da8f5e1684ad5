@@ -1,0 +1,50 @@
+package me.brook.PokemonCreator.input.tool;
+
+import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+
+import me.brook.PokemonCreator.graphics.style.ToggleIcon;
+
+public class PaintPanel extends JPanel {
+
+	public PaintPanel() {
+
+		List<JToggleButton> icons = new ArrayList<>();
+		
+		addButtons(icons);
+
+		int columns = 2;
+		int total = icons.size();
+		int rows = total / columns;
+
+		GridLayout grid = new GridLayout(rows, columns, 1, 2);
+		this.setLayout(grid);
+
+		for(JToggleButton icon : icons) {
+			icon.setUI(new ToggleIcon(new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB)));
+			this.add(icon);
+		}
+	}
+
+	private void addButtons(List<JToggleButton> icons) {
+		JToggleButton button = new JToggleButton("pencil");
+		
+	}
+	
+	public static class PaintButton {
+		private JToggleButton button;
+		private PaintTool tool;
+
+		public PaintButton(JToggleButton button, PaintTool tool) {
+			super();
+			this.button = button;
+			this.tool = tool;
+		}
+	}
+	
+}

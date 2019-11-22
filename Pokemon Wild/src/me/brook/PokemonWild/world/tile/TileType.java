@@ -32,7 +32,7 @@ public enum TileType {
 	private void loadTile(Configuration config, BufferedImage sheet) {
 		// We load the tile data now from the basic.yml
 		String name = this.toString().toLowerCase();
-		int size = config.getInt("textures.info.size");
+		int size = config.getInt("textures.1x1.info.size");
 		config.setSection("textures.1x1." + name);
 		
 		isCollidable = config.getBoolean("collidable");

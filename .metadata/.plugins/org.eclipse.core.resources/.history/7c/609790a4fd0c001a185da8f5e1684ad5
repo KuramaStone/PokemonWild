@@ -1,0 +1,17 @@
+package me.brook.PokemonCreator;
+
+import java.io.IOException;
+
+import me.brook.PokemonCreator.world.yaml.ConfigWriter;
+
+public class Start {
+
+	public static void main(String[] args) throws IOException {
+//		PokemonCreator creator = new PokemonCreator();
+//		creator.run();
+		
+		ConfigWriter writer = new ConfigWriter(new File("C:\\Users\\Stone\\Documents\\Pokemon Wild\\areas\\data.yml"));
+		writer.set("File.alpha.beta", "ice");
+	}
+
+}

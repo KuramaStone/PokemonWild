@@ -1,0 +1,5 @@
+package me.brook.PokemonCreator.toolbox;
+
+public class Settings {
+
+}

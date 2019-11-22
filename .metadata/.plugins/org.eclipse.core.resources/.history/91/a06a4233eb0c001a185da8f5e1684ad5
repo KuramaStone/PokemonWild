@@ -1,0 +1,63 @@
+package me.brook.PokemonCreator.input.tool;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+import me.brook.PokemonCreator.world.area.PokeArea;
+import me.brook.PokemonCreator.world.tile.Tile;
+
+public class FillAreaTool extends PaintTool {
+
+	private Point pressStart, pressEnd;
+	private int clickType;
+
+	public FillAreaTool(PokemonCreator creator) {
+		super(creator);
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		g.setColor(Color.RED);
+		System.out.println(pressStart + " " + pressEnd);
+		if(pressStart != null && pressEnd != null) {
+			g.drawRect(pressStart.x, pressStart.y, pressEnd.x, pressEnd.y);
+		}
+	}
+
+	@Override
+	public void handleInput(InputHandler input) {
+
+		Point mouse = drawer.getMousePosition();
+
+		if(mouse == null) {
+			return;
+		}
+		pressEnd = mouse;
+
+		if(input.isLeftMousePressed() && pressStart == null) {
+			pressStart = mouse;
+			clickType = 1;
+		}
+
+//		if(input.isLeftMouseClicked()) { }
+
+	}
+
+	private List<Tile> getTilesAt(Point tileLocation) {
+		List<Tile> tiles = new ArrayList<>();
+
+		for(PokeArea area : world.getAreas()) {
+
+			tiles.addAll(area.getTilseAt(tileLocation));
+
+		}
+
+		return tiles;
+	}
+
+}

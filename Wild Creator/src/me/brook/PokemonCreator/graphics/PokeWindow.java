@@ -41,7 +41,7 @@ public class PokeWindow extends JFrame {
 
 	private void createWindow() throws IOException {
 		this.setTitle("Pokemon Wild");
-		this.setSize(PokeWindow.SIZE + 360, PokeWindow.SIZE + 30);
+		this.setSize(PokeWindow.SIZE + 300 + 300, PokeWindow.SIZE + 30);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -54,21 +54,23 @@ public class PokeWindow extends JFrame {
 				System.exit(0);
 			}
 		});
-		
+
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		drawer.setPreferredSize(new Dimension(SIZE, SIZE));
-		JPanel options = creator.getMaker().addComponents(gbc);
+		JPanel options = creator.getMaker().addOptionComponents(gbc);
+		JPanel paint = creator.getMaker().addPaintComponents(gbc);
 
 		JPanel north = new JPanel();
 		north.add(options, BorderLayout.NORTH);
 
 		this.add(north, BorderLayout.WEST);
-		this.add(drawer, BorderLayout.EAST);
-		
+		this.add(drawer, BorderLayout.CENTER);
+		this.add(paint, BorderLayout.EAST);
+
 		this.setVisible(true);
 	}
-	
+
 	public InputHandler getInput() {
 		return input;
 	}

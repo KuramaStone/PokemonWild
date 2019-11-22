@@ -6,73 +6,70 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 public class InputHandler {
 
-	public Point mouse;
+	public Point mousere;
 
-	private boolean isLeftMousePressed, isMiddleMousePressed, isRightMousePressed;
-	private boolean isLeftClicked, isMiddleClicked, isRightClicked;
+	// Pressed is if it is currently held down
+	// Clicked is if it has been clicked since last tick
+	private boolean[] mousePressed, mouseReleased;
+	private int mouseWheel = 0;
 	private boolean[] isKeyPressed;
 	
+	private boolean hasMouseMovedSincePressed = false;
+	private Point startClickPoint;
+	
 	public InputHandler(Component component) {
+		
+		MouseInput mouse = new MouseInput();
 		component.addKeyListener(new KeyInput());
-		component.addMouseListener(new MouseInput());
+		component.addMouseListener(mouse);
+		component.addMouseWheelListener(mouse);
 		
 		isKeyPressed = new boolean[1000];
+		mousePressed = new boolean[10];
+		mouseReleased = new boolean[10];
 	}
 	
 	public void update() {
-		isLeftClicked = false;
-		isMiddleClicked = false;
-		isRightClicked = false;
+		mouseWheel = 0;
+		
+		for(int i = 0; i < mouseReleased.length; i++) {
+			mouseReleased[i] = false;
+		}
 	}
 	
 	public class MouseInput extends MouseAdapter {
 		
 		@Override
 		public void mouseMoved(MouseEvent e) {
-			mouse = e.getPoint();
+			mousere = e.getPoint();
+			
+			if(mousere.distance(startClickPoint) > 5) {
+				hasMouseMovedSincePressed = true;
+			}
 		}
 		
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			if(e.getButton() == MouseEvent.BUTTON1) {
-				isLeftClicked = true;
-			}
-			else if(e.getButton() == MouseEvent.BUTTON3) {
-				isRightClicked = true;
-			}
-			else if(e.getButton() == MouseEvent.BUTTON2) {
-				isMiddleClicked = true;
-			}
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			mouseWheel = e.getUnitsToScroll();
 		}
+		
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if(e.getButton() == MouseEvent.BUTTON1) {
-				isLeftMousePressed = true;
-			}
-			else if(e.getButton() == MouseEvent.BUTTON3) {
-				isRightMousePressed = true;
-			}
-			else if(e.getButton() == MouseEvent.BUTTON2) {
-				isMiddleMousePressed = true;
-			}
+			mousePressed[e.getButton()] = true;
+			startClickPoint = e.getPoint();
 		}
-
+		
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			if(e.getButton() == MouseEvent.BUTTON1) {
-				isLeftMousePressed = false;
-			}
-			else if(e.getButton() == MouseEvent.BUTTON3) {
-				isRightMousePressed = false;
-			}
-			else if(e.getButton() == MouseEvent.BUTTON2) {
-				isMiddleMousePressed = false;
-			}
+			mouseReleased[e.getButton()] = true;
+			mousePressed[e.getButton()] = false;
 		}
+		
 	}
 
 	public class KeyInput implements KeyListener {
@@ -95,29 +92,37 @@ public class InputHandler {
 	public boolean isKeyPressed(int keycode) {
 		return isKeyPressed[keycode];
 	}
+	
+	public int getMouseWheel() {
+		return mouseWheel;
+	}
+	
+	public boolean hasMouseMovedSincePressed() {
+		return hasMouseMovedSincePressed;
+	}
+
+	public boolean isLeftMousePressed() {
+		return mousePressed[MouseEvent.BUTTON1];
+	}
 
 	public boolean isMiddleMousePressed() {
-		return isMiddleMousePressed;
+		return mousePressed[MouseEvent.BUTTON2];
 	}
-	
-	public boolean isLeftMousePressed() {
-		return isLeftMousePressed;
-	}
-	
+
 	public boolean isRightMousePressed() {
-		return isRightMousePressed;
+		return mousePressed[MouseEvent.BUTTON3];
 	}
-
-	public boolean isLeftMouseClicked() {
-		return isLeftClicked;
+	
+	public boolean isLeftMouseReleased() {
+		return mouseReleased[MouseEvent.BUTTON1];
 	}
-
-	public boolean isMiddleMouseClicked() {
-		return isMiddleClicked;
+	
+	public boolean isMiddleMouseReleased() {
+		return mouseReleased[MouseEvent.BUTTON2];
 	}
-
-	public boolean isRightMouseClicked() {
-		return isRightClicked;
+	
+	public boolean isRightMouseReleased() {
+		return mouseReleased[MouseEvent.BUTTON3];
 	}
 
 }

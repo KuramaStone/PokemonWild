@@ -1,0 +1,9 @@
+package me.brook.PokemonCreator.input.tool;
+
+import java.awt.Graphics2D;
+
+public interface Paintable {
+
+	public void draw(Graphics g);
+	
+}

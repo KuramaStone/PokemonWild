@@ -1,0 +1,26 @@
+package me.brook.PokemonCreator.world;
+
+import java.util.List;
+
+import me.brook.PokemonCreator.world.area.PokeArea;
+
+public class PokeConnection {
+	
+	private List<PokeArea> areas;
+	
+	public PokeConnection() {
+	}
+	
+	public PokeConnection(List<PokeArea> areas) {
+		this.areas = areas;
+	}
+
+	public List<PokeArea> getAreas() {
+		return areas;
+	}
+	
+	public void setAreas(List<PokeArea> areas) {
+		this.areas = areas;
+	}
+
+}

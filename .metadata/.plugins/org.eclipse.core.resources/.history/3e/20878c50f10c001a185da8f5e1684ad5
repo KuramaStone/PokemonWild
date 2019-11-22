@@ -1,0 +1,16 @@
+package me.brook.PokemonCreator.input;
+
+import javax.swing.JSpinner;
+
+import me.brook.PokemonCreator.world.PokeWorld;
+
+public class AreaSpinner extends JSpinner {
+	
+	private PokeWorld world;
+
+	public AreaSpinner(PokeWorld world) {
+		super();
+		this.world = world;
+	}
+
+}

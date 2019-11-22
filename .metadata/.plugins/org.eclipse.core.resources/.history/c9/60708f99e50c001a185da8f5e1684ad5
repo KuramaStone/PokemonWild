@@ -1,0 +1,10 @@
+package me.brook.PokemonCreator.input.tool;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+
+public abstract class PaintTool {
+
+	public abstract void handleInput(PokemonCreator creator, InputHandler input);
+	
+}
