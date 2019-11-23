@@ -1,0 +1,17 @@
+package me.brook.PokemonCreator.input.tool;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+
+public abstract class AreaPaintTool extends PaintTool {
+
+	public AreaPaintTool(PokemonCreator creator) {
+		super(creator);
+	}
+
+	@Override
+	public void handleInput(InputHandler input) {
+		
+	}
+
+}

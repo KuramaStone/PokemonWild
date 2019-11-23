@@ -1,0 +1,98 @@
+package me.brook.PokemonCreator.input.tool;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+import me.brook.PokemonCreator.world.tile.Tile;
+
+public class MoveAreaTool extends SelectAreaPaintTool {
+
+	private Point currentTileOffset;
+	private List<Point> selectedPoints;
+	
+	public MoveAreaTool(PokemonCreator creator) {
+		super(creator);
+	}
+
+	@Override
+	public void draw(Graphics2D g) {
+		g.setColor(Color.RED);
+		if(mouseStart != null && mouseEnd != null) {
+			Point start = constructTopLeft(), end = constructBottomRight();
+
+			int x1 = (start.x + drawer.getxOffset()) * drawer.getTileSize();
+			int y1 = (start.y + drawer.getyOffset()) * drawer.getTileSize();
+
+			int x2 = (end.x + drawer.getxOffset()) * drawer.getTileSize();
+			int y2 = (end.y + drawer.getyOffset()) * drawer.getTileSize();
+
+			g.setColor(Color.RED);
+			g.setStroke(new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));
+			g.drawRect(x1, y1, x2 - x1, y2 - y1);
+		}
+	}
+
+	@Override
+	protected void handleInput(InputHandler input, Point mouse) {
+
+		if(maker.getCurrentArea() == null) {
+			return;
+		}
+
+		if(input.getMousePressed()[clickType] && selectedPoints == null) {
+			mouseEnd = drawer.getTileLocationAt(mouse);
+		}
+		else if(mouseStart != null && mouseEnd != null) {
+			Point start = constructTopLeft(), end = constructBottomRight();
+
+			selectedPoints = new ArrayList<>();
+			for(int x = start.x; x < end.x; x++) {
+				for(int y = start.y; y < end.y; y++) {
+					selectedPoints.add(new Point(x, y));
+				}
+			}
+
+			return;
+		}
+
+		if(input.isLeftMousePressed() && selectedPoints != null) {
+			Point current = drawer.getTileLocationAt(mouse);
+			if(currentTileOffset == null) {
+				currentTileOffset = current;
+			}
+			
+			// Offset to add
+			Point add = subtract(current, currentTileOffset);
+			System.out.println(add);
+
+			for(Point point : selectedPoints) {
+
+				for(Tile tile : maker.getCurrentArea().getTilesAt(point)) {
+					tile.x += add.x;
+					tile.y += add.y;
+				}
+				point.x += add.x;
+				point.y += add.y;
+
+				mouseStart.x += add.x;
+				mouseStart.y += add.y;
+				mouseEnd.x += add.x;
+				mouseEnd.y += add.y;
+			}
+			
+			currentTileOffset = current;
+		}
+	}
+
+	private Point subtract(Point a, Point b) {
+		return new Point(a.x - b.x, a.y - b.y);
+	}
+
+	
+}

@@ -1,0 +1,20 @@
+package me.brook.PokemonCreator.input.tool;
+
+import java.awt.Point;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+
+public class MoveAreaTool extends SelectAreaPaintTool {
+
+	public MoveAreaTool(PokemonCreator creator) {
+		super(creator);
+	}
+
+	@Override
+	protected void handleInput(InputHandler input, Point mouse) {
+		
+	}
+
+	
+}

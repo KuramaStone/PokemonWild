@@ -1,0 +1,51 @@
+package me.brook.PokemonCreator.graphics.style;
+
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.LayoutManager;
+
+public class FixedGridLayout implements LayoutManager {
+
+	private int gridwidth, gridheight;
+	private int gridSizeWidth, gridSizeHeight;
+	
+	private int componentNumber = 0;
+	
+	public FixedGridLayout(int gridwidth, int gridheight, int gridSizeWidth, int gridSizeHeight) {
+		this.gridwidth = gridwidth;
+		this.gridheight = gridheight;
+		this.gridSizeWidth = gridSizeWidth;
+		this.gridSizeHeight = gridSizeHeight;
+	}
+
+	@Override
+	public void addLayoutComponent(String name, Component comp) {
+		int x = componentNumber % gridwidth;
+		int y = componentNumber / gridwidth;
+		comp.setLocation(x, y);
+		
+		componentNumber++;
+	}
+
+	@Override
+	public void layoutContainer(Container parent) {
+		
+	}
+
+	@Override
+	public Dimension minimumLayoutSize(Container parent) {
+		return null;
+	}
+
+	@Override
+	public Dimension preferredLayoutSize(Container parent) {
+		return null;
+	}
+
+	@Override
+	public void removeLayoutComponent(Component comp) {
+		
+	}
+
+}

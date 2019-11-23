@@ -1,0 +1,16 @@
+package me.brook.PokemonCreator;
+
+import java.io.File;
+import java.io.IOException;
+
+import me.brook.PokemonCreator.world.yaml.ConfigReader;
+
+public class Start {
+
+	public static void main(String[] args) throws IOException {
+		PokemonCreator creator = new PokemonCreator();
+		creator.run();
+	}
+	
+
+}

@@ -72,6 +72,9 @@ public class PokeConnection {
 			YamlReader reader = new YamlReader(new FileReader(file));
 			PokeConnection connections = reader.read(PokeConnection.class);
 			
+			// Reform PokeArea construction
+			connections.getAreas().forEach(pa -> pa.construct());
+			
 			return connections;
 		}
 		catch (Exception e) {

@@ -8,5 +8,6 @@ public class Start {
 		PokemonCreator creator = new PokemonCreator();
 		creator.run();
 	}
+	
 
 }

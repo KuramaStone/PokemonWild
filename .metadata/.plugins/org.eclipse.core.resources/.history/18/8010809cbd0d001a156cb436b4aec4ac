@@ -1,0 +1,12 @@
+package me.brook.PokemonCreator.input.tool;
+
+import me.brook.PokemonCreator.PokemonCreator;
+
+public class MovePointTool extends SelectAreaPaintTool {
+
+	public MovePointTool(PokemonCreator creator) {
+		super(creator);
+	}
+
+	
+}

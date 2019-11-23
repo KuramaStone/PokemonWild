@@ -18,8 +18,8 @@ public class ConfigReader {
 	private Map<?, ?> map;
 	private String basePath = "";
 
-	public ConfigReader(File yamlFile) {
-		this.yamlFile = yamlFile;
+	public ConfigReader(String path) {
+		this.yamlFile = new File(path);
 
 		try {
 			YamlReader reader = new YamlReader(new FileReader(yamlFile));

@@ -3,7 +3,6 @@ package me.brook.PokemonCreator.world.tile;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import me.brook.PokemonCreator.toolbox.Tools;
@@ -11,15 +10,20 @@ import me.brook.PokemonCreator.world.yaml.ConfigReader;
 
 public enum TileType {
 
-	ERROR, GRASS, TALL_GRASS, RED_FLOWER, ORANGE_FLOWER, BLUE_FLOWER, YELLOW_FLOWER, SMALL_BUSH, LONG_BUSH, GRASS_PATH,
+	ERROR, GRASS, TALL_GRASS, RED_FLOWER, ORANGE_FLOWER, BLUE_FLOWER, YELLOW_FLOWER, SMALL_BUSH, LONG_BUSH, GRASS_PATH, FRAIL_ROCK,
 	// Tall shit
-	SHORT_TREE, TREE;
+	SHORT_TREE, TREE,
+	// water
+	WATER, WATER_STONE, WATER_EDGE_CORNER_LEFT, WATER_EDGE_CORNER_RIGHT, WATER_EDGE_LEFT, WATER_EDGE_RIGHT, WATER_EDGE_BOTTOM;
 
 	private static int idCount = 0;
 
 	private int id;
 	private BufferedImage[] images;
 	private int animationCycle; // The number of ticks until it shall go to the next animation frame.
+	
+	// Layer to render this tile
+	private int layer;
 
 	private boolean isCollidable, isAnimated;
 	private Rectangle collidingArea;
@@ -29,8 +33,7 @@ public enum TileType {
 	private int ticks = 0;
 
 	public static void loadTileData() throws IOException {
-		ConfigReader config = new ConfigReader(
-				new File("C:\\Users\\Stone\\PokemonWild\\Pokemon Wild\\res\\tiles\\yml\\basic.yml"));
+		ConfigReader config = new ConfigReader("res\\tiles\\yml\\basic.yml");
 
 		// Load 1x1
 		BufferedImage sheet = Tools.readImage("res\\tiles\\" + config.get("textures.1x1.info.file"));
@@ -54,12 +57,14 @@ public enum TileType {
 	}
 
 	private void loadVariedTile(ConfigReader config, BufferedImage sheet) {
+		id = idCount++;
+		
 		String name = this.toString().toLowerCase();
 		config.setSection("textures.varied." + name);
 
 		isAnimated = config.getBoolean("animated");
 
-		id = idCount++;
+		layer = config.getInt("layer");
 		int variants = config.getInt("variants");
 		images = new BufferedImage[variants];
 		animationCycle = config.getInt("cycle");
@@ -95,6 +100,7 @@ public enum TileType {
 		width = 1;
 		height = 1;
 
+		layer = config.getInt("layer");
 		isCollidable = config.getBoolean("collidable");
 		if(isCollidable) {
 			collidingArea = new Rectangle(0, 0, 1, 1);
@@ -209,6 +215,10 @@ public enum TileType {
 
 	public int getTileHeight() {
 		return height;
+	}
+	
+	public int getLayer() {
+		return layer;
 	}
 
 }

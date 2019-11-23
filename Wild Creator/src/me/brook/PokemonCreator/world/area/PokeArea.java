@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import me.brook.PokemonCreator.toolbox.Tools;
@@ -28,7 +29,7 @@ public class PokeArea {
 	 * The corners of all tiles on the extremities to get a box that contains all
 	 * tiles.
 	 */
-	public Rectangle surface;
+	private Rectangle surface;
 
 	public PokeArea(String name, List<Tile> tiles) {
 		this.areaName = name;
@@ -43,8 +44,19 @@ public class PokeArea {
 
 		recalculateSurface();
 	}
-	
+
 	public PokeArea() {
+	}
+
+	public void construct() {
+		long seed = 0;
+		for(char c : areaName.toCharArray()) {
+			seed += c * 852377;
+		}
+		color = Tools.getUniqueColor(seed);
+		transparentColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 50);
+
+		recalculateSurface();
 	}
 
 	public void recalculateSurface() {
@@ -86,6 +98,11 @@ public class PokeArea {
 	public void add(Tile tile) {
 		tiles.add(tile);
 		recalculateSurface();
+		sort();
+	}
+
+	private void sort() {
+		tiles.sort(SORTER);
 	}
 
 	public boolean remove(Tile tile) {
@@ -130,13 +147,30 @@ public class PokeArea {
 		return areaName;
 	}
 
+	public static Comparator<Tile> SORTER = new Comparator<Tile>() {
+
+		@Override
+		public int compare(Tile t1, Tile t2) {
+
+			int x = t1.x - t2.x;
+			int y = t1.y - t2.y;
+			int layer = t1.getLayer() - t2.getLayer();
+
+			if(y == 0) {
+
+				if(x == 0) {
+					return layer;
+				}
+				else {
+					return x;
+				}
+
+			}
+			else {
+				return y;
+			}
+		}
+
+	};
+
 }
-
-
-
-
-
-
-
-
-

@@ -57,4 +57,8 @@ public class Tile {
 		return height;
 	}
 
+	public int getLayer() {
+		return getType().getLayer();
+	}
+
 }

@@ -3,6 +3,7 @@ textures:
     info:
       file: basic.png
     short_tree:
+      layer: 10
       variants: 2
       location:
         top: 4,20
@@ -12,6 +13,7 @@ textures:
       collisions:
         collidable: true 
     tree:
+      layer: 10
       variants: 2
       location:
         top: 0,20
@@ -23,6 +25,68 @@ textures:
   1x1:
     info:
       file: basic.png
+    water:
+      layer: 5
+      animated: true
+      cycle: 1
+      variants: 7
+      location:
+        start: 0,45
+    water_stone:
+      layer: 5
+      animated: true
+      cycle: 20
+      variants: 5
+      location:
+        start: 0,46
+    water_edge_corner_right:
+      layer: 5
+      collidable: true
+      animated: true
+      variants: 7
+      cycle: 1
+      location:
+        start: 0,51
+    water_edge_right:
+      layer: 5
+      collidable: true
+      animated: true
+      variants: 7
+      cycle: 1
+      location:
+        start: 0,52
+    water_edge_left:
+      layer: 5
+      collidable: true
+      animated: true
+      variants: 7
+      cycle: 1
+      location:
+        start: 0,53     
+    water_edge_bottom:
+      layer: 5
+      collidable: true
+      animated: true
+      variants: 7
+      cycle: 1
+      location:
+        start: 0,54    
+    water_edge_corner_left: 
+      layer: 5
+      collidable: true
+      animated: true
+      variants: 7
+      cycle: 1
+      location:
+        start: 0,55
+        
+    frail_rock:
+      layer: 5
+      collidable: true
+      variants: 1
+      location:
+        start: 0,50
+      
     error:
       collidable: true
       variants: 1
@@ -33,13 +97,14 @@ textures:
       location:
         start: 0,0
     tall_grass:
+      layer: 5
       variants: 1
       location:
         start: 0,1
         
     red_flower:
       animated: true
-      cycle: 30
+      cycle: 15
       variants: 5
       location:
         start: 0,2

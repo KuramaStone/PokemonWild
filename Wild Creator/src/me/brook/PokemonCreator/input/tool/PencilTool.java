@@ -22,12 +22,7 @@ public class PencilTool extends PaintTool {
 	}
 
 	@Override
-	public void handleInput(InputHandler input) {
-
-		Point mouse = drawer.getMousePosition();
-		if(mouse == null) {
-			return;
-		}
+	public void handleInput(InputHandler input, Point mouse) {
 
 		PokeArea currentArea = maker.getCurrentArea();
 		TileData currentTileData = maker.getCurrentTileData();
@@ -69,24 +64,6 @@ public class PencilTool extends PaintTool {
 			}
 			else {
 				hasRemovalBeenPerformed = false;
-
-				if(input.isMiddleMouseReleased()) {
-					List<Tile> tiles = currentArea.getTiles();
-					for(int i = tiles.size() - 1; i >= 0; i--) {
-						Tile t = tiles.get(i);
-						if(t.isLocationAt(tile)) {
-							// This is so that the player may get the tile data one tile beneath the top
-							if(currentTileData.equals(t.getData())) {
-								continue;
-							}
-							else {
-								currentTileData = t.getData();
-								maker.getTileScroller().unSelectOtherTiles(currentTileData);
-								break;
-							}
-						}
-					}
-				}
 			}
 		}
 	}

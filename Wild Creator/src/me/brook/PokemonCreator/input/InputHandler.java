@@ -70,6 +70,12 @@ public class InputHandler {
 			mousePressed[e.getButton()] = false;
 		}
 		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			mouseReleased[e.getButton()] = true;
+			mousePressed[e.getButton()] = false;
+		}
+		
 	}
 
 	public class KeyInput implements KeyListener {
@@ -123,6 +129,14 @@ public class InputHandler {
 	
 	public boolean isRightMouseReleased() {
 		return mouseReleased[MouseEvent.BUTTON3];
+	}
+	
+	public boolean[] getMousePressed() {
+		return mousePressed;
+	}
+	
+	public boolean[] getMouseReleased() {
+		return mouseReleased;
 	}
 
 }

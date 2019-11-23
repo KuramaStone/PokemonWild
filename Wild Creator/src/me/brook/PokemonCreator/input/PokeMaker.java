@@ -5,12 +5,14 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,16 +25,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 import me.brook.PokemonCreator.PokemonCreator;
 import me.brook.PokemonCreator.graphics.PokeDrawer;
 import me.brook.PokemonCreator.input.tool.PaintPanel;
 import me.brook.PokemonCreator.input.tool.PaintTool;
+import me.brook.PokemonCreator.toolbox.RequestFocusListener;
 import me.brook.PokemonCreator.toolbox.Tools;
 import me.brook.PokemonCreator.world.PokeConnection;
 import me.brook.PokemonCreator.world.PokeConnection.LoadingFilter;
 import me.brook.PokemonCreator.world.PokeWorld;
 import me.brook.PokemonCreator.world.area.PokeArea;
+import me.brook.PokemonCreator.world.tile.Tile;
 import me.brook.PokemonCreator.world.tile.TileData;
 import me.brook.PokemonCreator.world.tile.TileType;
 
@@ -47,6 +54,9 @@ public class PokeMaker {
 	private TileData currentTileData = new TileData(TileType.GRASS, 0);
 	private PokeArea currentArea;
 
+	// This is to prevent the action listener from activating when updating it
+	private boolean isAlteringAreaSelection = false;
+	
 	public PokeMaker(PokemonCreator creator) {
 		this.creator = creator;
 		world = creator.getWorld();
@@ -79,6 +89,22 @@ public class PokeMaker {
 				drawer.addToZoom(-zoomAmount);
 			}
 		}
+
+		if(input.isMiddleMouseReleased()) {
+			Point tile = drawer.getTileLocationAt(drawer.getMousePosition());
+			List<Tile> tiles = currentArea.getTiles();
+			for(int i = tiles.size() - 1; i >= 0; i--) {
+				Tile t = tiles.get(i);
+				if(t.isLocationAt(tile)) {
+					// This is so that the player may get the tile data one tile beneath the top
+					if(!currentTileData.equals(t.getData())) {
+						currentTileData = t.getData();
+						getTileScroller().unSelectOtherTiles(currentTileData);
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	private void handleKeys(InputHandler input) {
@@ -99,10 +125,13 @@ public class PokeMaker {
 	private JComboBox<PokeArea> areaSelector;
 
 	public void updateAreaSelector() {
+		isAlteringAreaSelection = true;
 		areaSelector.removeAllItems();
 		for(PokeArea area : world.getAreas()) {
 			areaSelector.addItem(area);
 		}
+		areaSelector.setSelectedItem(creator.getMaker().getCurrentArea());
+		isAlteringAreaSelection = false;
 	}
 
 	public JPanel addOptionComponents(GridBagConstraints gbc) throws IOException {
@@ -117,8 +146,8 @@ public class PokeMaker {
 		deleteArea.setFocusable(false);
 		deleteArea.addActionListener(deleteAreaListener);
 
-		JLabel selectArea = new JLabel("Current Area: ");
-		selectArea.setFocusable(false);
+		JLabel selectAreaLabel = new JLabel("Current Area: ");
+		selectAreaLabel.setFocusable(false);
 		this.areaSelector = new JComboBox<>();
 		this.areaSelector.setFocusable(false);
 		areaSelector.addActionListener(areaSelectorListener);
@@ -142,6 +171,10 @@ public class PokeMaker {
 				drawer.setHighlightTiles(highlight.isSelected());
 			}
 		});
+		
+		JLabel searchLabel = new JLabel("Search: ");
+		JTextField searchbar = new JTextField(16);
+		searchbar.getDocument().addDocumentListener(searchbarListener);
 
 		JPanel options = new JPanel();
 		options.setLayout(new GridBagLayout());
@@ -160,7 +193,7 @@ public class PokeMaker {
 		gbc.insets = new Insets(50, 50, 2, 2);
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		options.add(selectArea, gbc);
+		options.add(selectAreaLabel, gbc);
 
 		gbc.insets = new Insets(50, 2, 2, 2);
 		gbc.gridx = 1;
@@ -182,8 +215,19 @@ public class PokeMaker {
 		highlight.setPreferredSize(new Dimension(128, 40));
 		options.add(highlight, gbc);
 
-		gbc.insets = new Insets(50, 2, 2, 2);
 
+		gbc.insets = new Insets(50, 75, 2, 2);
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		options.add(searchLabel, gbc);
+
+		gbc.insets = new Insets(50, 2, 2, 2);
+		
+		gbc.gridx = 1;
+		gbc.gridy = 4;
+		options.add(searchbar, gbc);
+		
+		gbc.insets = new Insets(2, 2, 2, 2);
 		JScrollPane tileSelector = new JScrollPane(tileScroller = new TileScroller(this),
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -193,7 +237,7 @@ public class PokeMaker {
 		gbc.gridwidth = (int) tileSelector.getPreferredSize().getWidth();
 		gbc.gridheight = (int) tileSelector.getPreferredSize().getHeight();
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = 5;
 		options.add(tileSelector, gbc);
 
 		return options;
@@ -267,7 +311,7 @@ public class PokeMaker {
 							"That name already exists! Would you like to overwrite it?",
 							"Confirmation", JOptionPane.YES_NO_OPTION);
 					if(result == JOptionPane.YES_OPTION) {
-						actionPerformed(e);
+						world.getConnections().save(creator.getSettings(), name); 
 					}
 				}
 				else if(name.isEmpty()) {
@@ -311,6 +355,8 @@ public class PokeMaker {
 			JPanel input = new JPanel();
 
 			JTextField areaName = new JTextField("Area name", 32);
+			areaName.selectAll();
+			areaName.addAncestorListener(new RequestFocusListener());
 			input.add(areaName);
 
 			int result = JOptionPane.showConfirmDialog(creator.getWindow(), input, "Area data",
@@ -323,7 +369,9 @@ public class PokeMaker {
 					actionPerformed(e);
 				}
 				else if(!name.isEmpty()) {
-					world.addArea(new PokeArea(name, new ArrayList<>()));
+					PokeArea area = new PokeArea(name, new ArrayList<>());
+					currentArea = area;
+					world.addArea(area);
 				}
 			}
 		}
@@ -333,9 +381,42 @@ public class PokeMaker {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(isAlteringAreaSelection) {
+				return;
+			}
+			
 			PokeArea selected = (PokeArea) ((JComboBox<PokeArea>) e.getSource()).getSelectedItem();
 
 			PokeMaker.this.currentArea = selected;
+		}
+	};
+
+	private DocumentListener searchbarListener = new DocumentListener() {
+		
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			update(e);
+		}
+		
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			update(e);
+		}
+		
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			update(e);
+		}
+		
+		private void update(DocumentEvent e) {
+			try {
+				String text = e.getDocument().getText(0, e.getDocument().getLength());
+				tileScroller.setIconsInPanel(text);
+			}
+			catch(BadLocationException e1) {
+				e1.printStackTrace();
+			}
+			
 		}
 	};
 

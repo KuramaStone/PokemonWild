@@ -1,0 +1,162 @@
+package me.brook.PokemonCreator.world.area;
+
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import me.brook.PokemonCreator.toolbox.Tools;
+import me.brook.PokemonCreator.world.tile.Tile;
+
+/*
+ * This is a single area alone. For multiple routes joining, look at PokeWorld
+ */
+public class PokeArea {
+
+	public String areaName;
+	public Map<Integer, List<Tile>> tilesMap;
+	private List<Tile> allTiles = new ArrayList<>();
+
+	/*
+	 * This is a randomly generated color to get a unique identification for showing
+	 * the surface area of an area. It is created by taking the area name and
+	 * turning it into a unique int, and using that as a seed for the random.
+	 */
+	private Color color, transparentColor;
+
+	/*
+	 * The corners of all tiles on the extremities to get a box that contains all
+	 * tiles.
+	 */
+	private Rectangle surface;
+
+	public PokeArea(String name, Map<Integer, List<Tile>> tiles) {
+		this.areaName = name;
+		this.tilesMap = tiles;
+
+		long seed = 0;
+		for(char c : name.toCharArray()) {
+			seed += c * 852377;
+		}
+		color = Tools.getUniqueColor(seed);
+		transparentColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 50);
+
+		recalculateSurface();
+	}
+
+	public void construct() {
+		long seed = 0;
+		for(char c : areaName.toCharArray()) {
+			seed += c * 852377;
+		}
+		color = Tools.getUniqueColor(seed);
+		transparentColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 50);
+
+		recalculateSurface();
+	}
+
+	public PokeArea() {
+	}
+
+	public void recalculateSurface() {
+		if(tilesMap.isEmpty()) {
+			this.surface = null;
+			return;
+		}
+
+		Rectangle area = new Rectangle(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+		// Get the four corners and put them on the Rectangle
+		for(List<Tile> tiles : tilesMap.values()) {
+			for(Tile t : tiles) {
+				if(t.getX() < area.x) {
+					area.x = t.getX();
+				}
+				if(t.getX() > area.width) {
+					area.width = t.getX();
+				}
+
+				if(t.getY() < area.y) {
+					area.y = t.getY();
+				}
+				if(t.getY() + 1 > area.height) {
+					area.height = t.getY();
+				}
+			}
+		}
+
+		this.surface = area;
+	}
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public Rectangle getAreaSurface() {
+		return surface;
+	}
+
+	public void add(Tile tile) {
+		List<Tile> tiles = this.tilesMap.get(tile.getLayer());
+
+		if(tiles == null) {
+			tiles = new ArrayList<>();
+			tiles.add(tile);
+		}
+
+		this.tilesMap.put(tile.getLayer(), tiles);
+		recalculateSurface();
+	}
+
+	public boolean remove(Tile tile) {
+		boolean boo = false;
+
+		for(List<Tile> tiles : tilesMap.values()) {
+			if(tiles.remove(tile)) {
+				boo = true;
+				break;
+			}
+		}
+
+		recalculateSurface();
+
+		return boo;
+	}
+
+	public List<Tile> getTilesAt(Point p) {
+		List<Tile> list = new ArrayList<>()
+				;
+		for(List<Tile> tiles : tilesMap.values()) {
+			for(Tile tile : tiles) {
+				if(tile.isLocationAt(p)) {
+					list.add(tile);
+				}
+			}
+		}
+
+		return list;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public Color getTransparentColor() {
+		return transparentColor;
+	}
+
+	public List<Tile> getTiles() {
+		
+		tilesMap.values().forEach(t -> tiles.addAll(t));
+		
+		return tiles;
+	}
+
+	@Override
+	public String toString() {
+		return areaName;
+	}
+
+}

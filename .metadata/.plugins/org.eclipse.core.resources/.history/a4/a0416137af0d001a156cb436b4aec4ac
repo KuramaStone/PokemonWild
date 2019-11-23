@@ -1,0 +1,46 @@
+package me.brook.PokemonCreator.input.tool;
+
+import java.awt.Point;
+
+import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.input.InputHandler;
+
+public abstract class AreaPaintTool extends PaintTool {
+
+	protected Point pressStart;
+
+	public AreaPaintTool(PokemonCreator creator) {
+		super(creator);
+	}
+
+	@Override
+	public void handleInput(InputHandler input) {
+
+		Point mouse = drawer.getMousePosition();
+
+		if(mouse == null) {
+			return;
+		}
+
+		if(maker.getCurrentArea() == null) {
+			return;
+		}
+		
+		int mousePressed = getMousePressed(input);
+		if(mousePressed != -1) {
+			pressStart = mouse;
+		}
+		
+	}
+
+	private int getMousePressed(InputHandler input) {
+		
+		for(int i = 0; i < input.getMousePressed().length; i++) {
+			if(input.getMousePressed()[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+}

@@ -1,7 +1,7 @@
 package me.brook.PokemonCreator.input.tool;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,129 +11,93 @@ import me.brook.PokemonCreator.input.InputHandler;
 import me.brook.PokemonCreator.world.area.PokeArea;
 import me.brook.PokemonCreator.world.tile.Tile;
 
-public class FillAreaTool extends PaintTool {
-
-	private Point pressStart, pressEnd;
-
-	// If should fill, add tiles. If not, then remove them.
-	private boolean shouldFill;
+public class FillAreaTool extends SelectAreaPaintTool {
 
 	public FillAreaTool(PokemonCreator creator) {
 		super(creator);
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void draw(Graphics2D g) {
 		g.setColor(Color.RED);
-		if(pressStart != null && pressEnd != null) {
-			Point start = new Point(), end = new Point();
+		if(mouseStart != null && mouseEnd != null) {
+			Point start = constructTopLeft(), end = constructBottomRight();
 
-			if(pressStart.x < pressEnd.x) {
-				start.x = pressStart.x;
-				end.x = pressEnd.x;
-			}
-			else {
-				start.x = pressEnd.x;
-				end.x = pressStart.x;
-			}
+			int x1 = (start.x + drawer.getxOffset()) * drawer.getTileSize();
+			int y1 = (start.y + drawer.getyOffset()) * drawer.getTileSize();
 
-			if(pressStart.y < pressEnd.y) {
-				start.y = pressStart.y;
-				end.y = pressEnd.y;
-			}
-			else {
-				start.y = pressEnd.y;
-				end.y = pressStart.y;
-			}
+			int x2 = (end.x + drawer.getxOffset()) * drawer.getTileSize();
+			int y2 = (end.y + drawer.getyOffset()) * drawer.getTileSize();
 
-			// Add padding to end to get bottom right of tile
-			end.x++;
-			end.y++;
-
-			start.x *= drawer.getTileSize();
-			start.y *= drawer.getTileSize();
-			end.x *= drawer.getTileSize();
-			end.y *= drawer.getTileSize();
-
-			g.drawRect(start.x, start.y, end.x - start.x, end.y - start.y);
+			g.setColor(Color.RED);
+			g.drawRect(x1, y1, x2 - x1, y2 - y1);
 		}
 	}
 
 	@Override
-	public void handleInput(InputHandler input) {
+	public void handleInput(InputHandler input, Point mouse) {
 
-		Point mouse = drawer.getMousePosition();
-
-		if(mouse == null) {
-			return;
-		}
-		
-		
 		if(maker.getCurrentArea() == null) {
 			return;
 		}
 
-		pressEnd = drawer.getTileLocationAt(mouse);
-
-		if(pressStart == null) {
-
-			if(input.isLeftMousePressed()) {
-				pressStart = drawer.getTileLocationAt(mouse);
-				shouldFill = true;
-			}
-			else if(input.isRightMousePressed()) {
-				pressStart = drawer.getTileLocationAt(mouse);
-				shouldFill = false;
-			}
+		if(input.getMousePressed()[clickType]) {
+			mouseEnd = drawer.getTileLocationAt(mouse);
 		}
+		else if(mouseStart != null && mouseEnd != null) {
+			Point start = constructTopLeft(), end = constructBottomRight();
 
-		if((shouldFill && input.isLeftMouseReleased()) ||
-				(!shouldFill && input.isRightMouseReleased())) {
-			// Get top left and bottom right corners
-			Point start = new Point(), end = new Point();
-
-			if(pressStart.x < pressEnd.x) {
-				start.x = pressStart.x;
-				end.x = pressEnd.x;
-			}
-			else {
-				start.x = pressEnd.x;
-				end.x = pressStart.x;
-			}
-
-			if(pressStart.y < pressEnd.y) {
-				start.y = pressStart.y;
-				end.y = pressEnd.y;
-			}
-			else {
-				start.y = pressEnd.y;
-				end.y = pressStart.y;
-			}
-			end.x++;
-			end.y++;
-
-			// Get all tiles the two points
 			List<Point> points = new ArrayList<>();
-
 			for(int x = start.x; x < end.x; x++) {
 				for(int y = start.y; y < end.y; y++) {
-					Point point = new Point(x, y);
-					points.add(point);
+					points.add(new Point(x, y));
 				}
 			}
 
-			// Either add or remove the tiles
-			if(shouldFill) {
+			if(clickType == 1) {
 				fillTiles(points);
 			}
-			else {
+			else if(clickType == 3) {
 				removeTiles(points);
 			}
 
-			pressStart = null;
+			mouseStart = null;
+			mouseEnd = null;
 		}
 
 	}
+
+//	private void removeSurfaceTiles(List<Point> points) {
+//		PokeArea area = maker.getCurrentArea();
+//
+//		// Get highest tile in selection
+//		Tile highest = null;
+//		for(Point p : points) {
+//
+//			for(Tile t : area.getTilesAt(p)) {
+//				if(highest == null) {
+//					highest = t;
+//					continue;
+//				}
+//
+//				if(t.getLayer() > highest.getLayer()) {
+//					highest = t;
+//				}
+//			}
+//
+//		}
+//
+//		for(Point p : points) {
+//
+//			for(Tile t : area.getTilesAt(p)) {
+//				if(t.getLayer() == highest.getLayer()) {
+//					area.remove(t);
+//					continue;
+//				}
+//			}
+//		}
+//
+//	}
 
 	private void fillTiles(List<Point> points) {
 

@@ -27,7 +27,7 @@ public class TileData {
 	public boolean equals(Object obj) {
 		if(obj instanceof TileData) {
 			TileData data = (TileData) obj;
-			return data.type == type && data.variant == variant;
+			return data.type == this.type && data.variant == this.variant;
 		}
 
 		return false;

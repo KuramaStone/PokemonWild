@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -21,7 +22,7 @@ public class PokeDrawer extends JPanel {
 	private static final long serialVersionUID = 604046713316255320L;
 
 	private PokemonCreator creator;
-	
+
 	private boolean highlightTiles = false;
 	private boolean showHitboxes = false;
 	private boolean highlightAreas = true;
@@ -42,7 +43,7 @@ public class PokeDrawer extends JPanel {
 	}
 
 	public void drawTool(PaintTool currentTool) {
-		currentTool.draw(buffer.getGraphics());
+		currentTool.draw((Graphics2D) buffer.getGraphics());
 	}
 
 	@Override
@@ -70,22 +71,20 @@ public class PokeDrawer extends JPanel {
 				continue;
 			}
 
-			int offsetX = xOffset * getTileSize();
-			int offsetY = yOffset * getTileSize();
-
 			for(Tile tile : area.getTiles()) {
 
-				int x = tile.getX() * getTileSize();
-				int y = tile.getY() * getTileSize();
+				int tx = (tile.getX() + xOffset) * getTileSize();
+				int ty = (tile.getY() + yOffset) * getTileSize();
 
-				int tx = x + offsetX;
-				int ty = y + offsetY;
 				drawTile(tx, ty, tile);
 				// g.drawString(String.valueOf(tile.getX() + "," + tile.getY()), tx +
 				// getTileSize() / 2, ty + getTileSize() / 2);
 			}
+			
+		}
 
-			if(highlightAreas) {
+		if(highlightAreas) {
+			for(PokeArea area : new ArrayList<>(world.getAreas())) {
 				Rectangle surface = area.getAreaSurface();
 				if(surface != null) {
 					g.setColor(area.getColor());
@@ -193,6 +192,10 @@ public class PokeDrawer extends JPanel {
 
 	public void resetZoom(double d) {
 		this.zoom = 1.0;
+	}
+
+	public BufferedImage getBuffer() {
+		return buffer;
 	}
 
 }

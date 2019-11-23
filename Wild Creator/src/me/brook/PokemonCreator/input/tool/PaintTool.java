@@ -1,6 +1,7 @@
 package me.brook.PokemonCreator.input.tool;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
 
 import me.brook.PokemonCreator.PokemonCreator;
 import me.brook.PokemonCreator.graphics.PokeDrawer;
@@ -22,10 +23,20 @@ public abstract class PaintTool {
 		world = creator.getWorld();
 		maker = creator.getMaker();
 	}
-
-	public abstract void handleInput(InputHandler input);
 	
-	public void draw(Graphics g) {
+	public void handleInput(InputHandler input) {
+		Point mouse = drawer.getMousePosition();
+
+		if(mouse == null || mouse.x > drawer.getBuffer().getWidth()) {
+			return;
+		}
+		
+		handleInput(input, mouse);
+	}
+
+	protected abstract void handleInput(InputHandler input, Point mouse);
+	
+	public void draw(Graphics2D g) {
 		
 	}
 	
