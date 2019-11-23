@@ -1,0 +1,14 @@
+package me.brook.PokemonCreator.input;
+
+import javax.swing.JPanel;
+
+public class StructureScroller extends JPanel {
+
+	private PokeMaker maker;
+
+	public StructureScroller(PokeMaker maker) {
+		super();
+		this.maker = maker;
+	}
+
+}

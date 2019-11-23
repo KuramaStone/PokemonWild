@@ -61,4 +61,8 @@ public class Tile {
 		return getType().getLayer();
 	}
 
+	public boolean isCollidable() {
+		return data.isCollidable();
+	}
+
 }

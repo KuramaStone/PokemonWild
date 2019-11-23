@@ -1,0 +1,39 @@
+package me.brook.PokemonCreator.input;
+
+import java.util.List;
+
+import javax.swing.JPanel;
+
+import me.brook.PokemonCreator.world.tile.TileType;
+
+public class StructureScroller extends JPanel {
+
+	private PokeMaker maker;
+
+	private List<StructureIcon> icons;
+
+	public StructureScroller(PokeMaker maker) {
+		this.maker = maker;
+
+		addIcons();
+	}
+
+	private void addIcons() {
+		
+	}
+
+	public static class StructureIcon {
+
+		private TileType type;
+
+		public StructureIcon(TileType type) {
+			this.type = type;
+		}
+
+		public TileType getType() {
+			return type;
+		}
+
+	}
+
+}

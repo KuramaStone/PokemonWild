@@ -1,0 +1,82 @@
+package me.brook.PokemonCreator.input;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+
+import me.brook.PokemonCreator.graphics.style.FixedGridLayout;
+import me.brook.PokemonCreator.graphics.style.ToggleIcon;
+import me.brook.PokemonCreator.world.tile.TileType;
+
+public class StructureScroller extends JPanel {
+
+	private static final long serialVersionUID = 1275918524454747478L;
+
+	private PokeMaker maker;
+
+	private List<StructureIcon> icons;
+
+	public StructureScroller(PokeMaker maker) {
+		this.maker = maker;
+
+		addIcons();
+		setIconsInPanel("");
+	}
+
+	public void setIconsInPanel(String string) {
+		icons.forEach(t -> this.remove(t.button));
+
+		
+		for(StructureIcon tt : icons) {
+			if(tt.getType().toString().toLowerCase().contains(string.toLowerCase())) {
+				this.add(tt.button);
+			}
+		}
+
+	}
+
+	private void addIcons() {
+		icons = new ArrayList<>();
+
+		int columns = 2;
+		int total = 0;
+		for(TileType type : TileType.values()) {
+			total += type.isStructure() ? 1 : 0;
+		}
+		int rows = total / columns + 1;
+
+		int size = 120;
+		this.setLayout(new FixedGridLayout(columns, rows, size, size));
+		
+		for(TileType type : TileType.values()) {
+			if(type.isStructure()) {
+				
+				StructureIcon icon = new StructureIcon(type);
+				icons.add(icon);
+				
+			}
+		}
+		
+	}
+
+	public static class StructureIcon {
+
+		private TileType type;
+		private JToggleButton button;
+
+		public StructureIcon(TileType type) {
+			this.type = type;
+			
+			button = new JToggleButton();
+			button.setUI(new ToggleIcon(type.getFullIcon()));
+		}
+
+		public TileType getType() {
+			return type;
+		}
+
+	}
+
+}

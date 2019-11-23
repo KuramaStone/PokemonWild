@@ -97,6 +97,8 @@ public class TileScroller extends JPanel {
 		public TileToggle(JToggleButton button, TileData data) {
 			this.button = button;
 			this.data = data;
+			
+			button.setToolTipText(data.getType().toString());
 		}
 
 		public JToggleButton getButton() {

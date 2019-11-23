@@ -1,0 +1,9 @@
+package me.brook.PokemonCreator.input;
+
+public class StructureScroller {
+
+	public StructureScroller(PokeMaker pokeMaker) {
+		// TODO Auto-generated constructor stub
+	}
+
+}

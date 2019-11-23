@@ -41,4 +41,8 @@ public class TileData {
 			return this.getType().getImages()[this.getVariant()];
 		}
 	}
+
+	public boolean isCollidable() {
+		return type.isCollidable(variant);
+	}
 }

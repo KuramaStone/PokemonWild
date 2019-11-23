@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 
 import com.esotericsoftware.yamlbeans.YamlReader;
 
+import me.brook.PokemonCreator.toolbox.Settings;
+
 public class ConfigReader {
 
 	private File yamlFile;
@@ -18,8 +20,8 @@ public class ConfigReader {
 	private Map<?, ?> map;
 	private String basePath = "";
 
-	public ConfigReader(String path) {
-		this.yamlFile = new File(path);
+	public ConfigReader(Settings settings, String path) {
+		this.yamlFile = new File(settings.getFolder(), path);
 
 		try {
 			YamlReader reader = new YamlReader(new FileReader(yamlFile));
@@ -116,6 +118,17 @@ public class ConfigReader {
 		int y = Integer.valueOf(split[1]);
 
 		return new Point(x, y);
+	}
+
+	public List<Integer> getIntList(String path) {
+		List<String> stringList = getStringList(path);
+		
+		List<Integer> list = new ArrayList<>();
+		for(String str : stringList) {
+			list.add(Integer.valueOf(str));
+		}
+
+		return list;
 	}
 
 }

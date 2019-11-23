@@ -1,0 +1,14 @@
+package me.brook.PokemonCreator.world.tile;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class StructureData {
+	
+	private Collection<TileData> tiles;
+	
+	public StructureData() {
+		tiles = new ArrayList<>();
+	}
+
+}

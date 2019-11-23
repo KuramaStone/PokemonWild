@@ -1,6 +1,5 @@
 package me.brook.PokemonCreator.input.tool;
 
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -11,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import me.brook.PokemonCreator.PokemonCreator;
+import me.brook.PokemonCreator.graphics.style.FixedGridLayout;
 import me.brook.PokemonCreator.graphics.style.ToggleIcon;
 import me.brook.PokemonCreator.input.PokeMaker;
 import me.brook.PokemonCreator.toolbox.Tools;
@@ -23,11 +23,10 @@ public class PaintPanel extends JPanel {
 	public PaintPanel(PokemonCreator creator, PokeMaker maker) {
 		addButtons(creator, maker);
 
-		int columns = 2;
+		int columns = 1;
 		int rows = 10;
 
-		GridLayout grid = new GridLayout(rows, columns, 1, 2);
-		this.setLayout(grid);
+		this.setLayout(new FixedGridLayout(columns, rows, 64, 64));
 
 		for(PaintButton icon : icons) {
 			this.add(icon.button);
@@ -47,7 +46,7 @@ public class PaintPanel extends JPanel {
 
 	private void addButtons(PokemonCreator creator, PokeMaker maker) {
 		icons = new ArrayList<>();
-		BufferedImage sheet = Tools.readImage("res\\sprites\\paint_tools.png");
+		BufferedImage sheet = Tools.readImage(creator.getSettings(), "res\\sprites\\paint_tools.png");
 		BufferedImage icon;
 		int size = 64;
 

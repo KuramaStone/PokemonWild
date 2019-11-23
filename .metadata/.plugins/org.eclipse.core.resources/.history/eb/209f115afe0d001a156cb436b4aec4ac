@@ -1,0 +1,61 @@
+package me.brook.PokemonCreator.input;
+
+import java.util.List;
+
+import javax.swing.JPanel;
+
+import me.brook.PokemonCreator.input.TileScroller.TileToggle;
+import me.brook.PokemonCreator.world.tile.TileType;
+
+public class StructureScroller extends JPanel {
+
+	private PokeMaker maker;
+
+	private List<StructureIcon> icons;
+
+	public StructureScroller(PokeMaker maker) {
+		this.maker = maker;
+
+		addIcons();
+		setIconsInPanel("");
+	}
+
+	public void setIconsInPanel(String string) {
+		icons.forEach(t -> this.remove(t.button));
+
+		for(StructureIcon tt : icons) {
+			if(tt.getData().getType().toString().toLowerCase().contains(string.toLowerCase())) {
+				this.add(tt.button);
+			}
+		}
+
+	}
+
+	private void addIcons() {
+		
+		for(TileType type : TileType.values()) {
+			if(type.isStructure()) {
+				
+				StructureIcon icon = new StructureIcon(type);
+				icons.add(icon);
+				
+			}
+		}
+		
+	}
+
+	public static class StructureIcon {
+
+		private TileType type;
+
+		public StructureIcon(TileType type) {
+			this.type = type;
+		}
+
+		public TileType getType() {
+			return type;
+		}
+
+	}
+
+}

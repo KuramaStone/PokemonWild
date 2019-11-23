@@ -80,7 +80,7 @@ public class PokeDrawer extends JPanel {
 				// g.drawString(String.valueOf(tile.getX() + "," + tile.getY()), tx +
 				// getTileSize() / 2, ty + getTileSize() / 2);
 			}
-			
+
 		}
 
 		if(highlightAreas) {
@@ -122,11 +122,13 @@ public class PokeDrawer extends JPanel {
 		}
 
 		if(showHitboxes) {
-			g.setColor(new Color(255, 0, 0, 64));
-			Rectangle rect = tile.getType().getCollidingArea();
-			if(rect != null) {
-				g.fillRect(tx, ty - (int) ((rect.getHeight() - 1) * getTileSize()),
-						(int) (rect.getWidth() * getTileSize()), (int) (rect.getHeight() * getTileSize()));
+			if(tile.isCollidable()) {
+				g.setColor(new Color(255, 0, 0, 64));
+				Rectangle rect = tile.getType().getCollidingArea();
+				if(rect != null) {
+					g.fillRect(tx, ty - (int) ((rect.getHeight() - 1) * getTileSize()),
+							(int) (rect.getWidth() * getTileSize()), (int) (rect.getHeight() * getTileSize()));
+				}
 			}
 		}
 	}

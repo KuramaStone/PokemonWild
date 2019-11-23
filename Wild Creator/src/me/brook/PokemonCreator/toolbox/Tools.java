@@ -17,8 +17,8 @@ public class Tools {
 		return Color.getHSBColor(hue, saturation, 1.0f);
 	}
 
-	public static BufferedImage readImage(String path) {
-		File file = new File(path);
+	public static BufferedImage readImage(Settings settings, String path) {
+		File file = new File(settings.getFolder(), path);
 		
 		try {
 			return ImageIO.read(file);

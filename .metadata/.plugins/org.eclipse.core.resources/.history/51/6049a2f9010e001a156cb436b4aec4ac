@@ -1,0 +1,23 @@
+package me.brook.PokemonCreator.world.tile;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class StructureData {
+	
+	private List<TileData> tiles;
+	
+	public StructureData(TileType type) {
+		
+		if(!type.isStructure()) {
+			throw new IllegalArgumentException("TileType '" + type + "' is not a structure.;")
+		}
+		
+		tiles = new ArrayList<>();
+	}
+
+	public List<TileData> getTiles() {
+		return tiles;
+	}
+
+}

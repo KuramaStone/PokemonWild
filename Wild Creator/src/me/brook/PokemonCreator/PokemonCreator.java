@@ -27,7 +27,7 @@ public class PokemonCreator implements Runnable {
 	public PokemonCreator() throws IOException {
 		loadSettings();
 		drawer = new PokeDrawer(this, PokeWindow.SIZE);
-		TileType.loadTileData();
+		TileType.loadTileData(settings);
 		world = new PokeWorld(this);
 		maker = new PokeMaker(this);
 		window = new PokeWindow(this);
@@ -36,7 +36,11 @@ public class PokemonCreator implements Runnable {
 	private void loadSettings() {
 		JFileChooser fr = new JFileChooser();
 		FileSystemView fw = fr.getFileSystemView();
-		this.settings = new Settings(new File(fw.getDefaultDirectory(), "Pokemon Wild"));
+		File file = new File("C:\\Users\\Stone\\");
+		if(!file.exists()) {
+			file = fw.getDefaultDirectory();
+		}
+		this.settings = new Settings(new File(file, "PokemonWild"));
 	}
 
 	@Override

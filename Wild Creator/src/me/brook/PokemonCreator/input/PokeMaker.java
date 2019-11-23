@@ -22,9 +22,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -39,6 +42,7 @@ import me.brook.PokemonCreator.world.PokeConnection;
 import me.brook.PokemonCreator.world.PokeConnection.LoadingFilter;
 import me.brook.PokemonCreator.world.PokeWorld;
 import me.brook.PokemonCreator.world.area.PokeArea;
+import me.brook.PokemonCreator.world.tile.StructureData;
 import me.brook.PokemonCreator.world.tile.Tile;
 import me.brook.PokemonCreator.world.tile.TileData;
 import me.brook.PokemonCreator.world.tile.TileType;
@@ -48,15 +52,21 @@ public class PokeMaker {
 	private PokemonCreator creator;
 	private PokeWorld world;
 	private PokeDrawer drawer;
+	
 	private TileScroller tileScroller;
-
+	private StructureScroller structureScroller;
+	
 	private PaintTool currentTool;
+
+	private DrawingMode drawingMode = DrawingMode.SINGLE;
 	private TileData currentTileData = new TileData(TileType.GRASS, 0);
+	private StructureData currentStructureData;
+
 	private PokeArea currentArea;
 
 	// This is to prevent the action listener from activating when updating it
 	private boolean isAlteringAreaSelection = false;
-	
+
 	public PokeMaker(PokemonCreator creator) {
 		this.creator = creator;
 		world = creator.getWorld();
@@ -152,12 +162,12 @@ public class PokeMaker {
 		this.areaSelector.setFocusable(false);
 		areaSelector.addActionListener(areaSelectorListener);
 
-		JButton save = new JButton(new ImageIcon(Tools.readImage("res\\misc\\save_icon.png")));
+		JButton save = new JButton(new ImageIcon(Tools.readImage(creator.getSettings(), "res\\misc\\save_icon.png")));
 		save.setPreferredSize(new Dimension(64, 64));
 		save.setFocusable(false);
 		save.addActionListener(saveConnectionsListener);
 
-		JButton open = new JButton(new ImageIcon(Tools.readImage("res\\misc\\open_icon.png")));
+		JButton open = new JButton(new ImageIcon(Tools.readImage(creator.getSettings(), "res\\misc\\open_icon.png")));
 		open.setPreferredSize(new Dimension(64, 64));
 		open.setFocusable(false);
 		open.addActionListener(openAreaListener);
@@ -171,7 +181,7 @@ public class PokeMaker {
 				drawer.setHighlightTiles(highlight.isSelected());
 			}
 		});
-		
+
 		JLabel searchLabel = new JLabel("Search: ");
 		JTextField searchbar = new JTextField(16);
 		searchbar.getDocument().addDocumentListener(searchbarListener);
@@ -215,30 +225,59 @@ public class PokeMaker {
 		highlight.setPreferredSize(new Dimension(128, 40));
 		options.add(highlight, gbc);
 
-
 		gbc.insets = new Insets(50, 75, 2, 2);
 		gbc.gridx = 0;
 		gbc.gridy = 4;
 		options.add(searchLabel, gbc);
 
 		gbc.insets = new Insets(50, 2, 2, 2);
-		
+
 		gbc.gridx = 1;
 		gbc.gridy = 4;
 		options.add(searchbar, gbc);
-		
-		gbc.insets = new Insets(2, 2, 2, 2);
+
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				int index = tabbedPane.getSelectedIndex();
+				
+				if(index == 0) {
+					drawingMode = DrawingMode.SINGLE;
+				}
+				else {
+					drawingMode = DrawingMode.GROUP;
+				}
+			}
+		});
+
+		JPanel modeIndividualTile = new JPanel();
 		JScrollPane tileSelector = new JScrollPane(tileScroller = new TileScroller(this),
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tileSelector.getVerticalScrollBar().setUnitIncrement(8);
-		tileSelector.setFocusable(false);
+		modeIndividualTile.add(tileSelector);
 		tileSelector.setPreferredSize(new Dimension(320, 300));
-		gbc.gridwidth = (int) tileSelector.getPreferredSize().getWidth();
-		gbc.gridheight = (int) tileSelector.getPreferredSize().getHeight();
+
+		JPanel modeStructure = new JPanel();
+		JScrollPane structureSelector = new JScrollPane(structureScroller = new StructureScroller(this),
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		structureSelector.getVerticalScrollBar().setUnitIncrement(8);
+		modeStructure.add(structureSelector);
+		structureSelector.setPreferredSize(new Dimension(320, 300));
+
+		tabbedPane.addTab("Tile Mode", modeIndividualTile);
+		tabbedPane.addTab("Structure Mode", structureSelector);
+
+		gbc.insets = new Insets(2, 2, 2, 2);
+		tabbedPane.setFocusable(false);
+		gbc.gridwidth = (int) tabbedPane.getPreferredSize().getWidth();
+		gbc.gridheight = (int) tabbedPane.getPreferredSize().getHeight();
 		gbc.gridx = 0;
 		gbc.gridy = 5;
-		options.add(tileSelector, gbc);
+		options.add(tabbedPane, gbc);
 
 		return options;
 	}
@@ -249,7 +288,7 @@ public class PokeMaker {
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		selector.setFocusable(false);
-		selector.setPreferredSize(new Dimension(128, 640));
+		selector.setPreferredSize(new Dimension(64 + 20, 640));
 
 		JPanel paint = new JPanel();
 		paint.add(selector, BorderLayout.CENTER);
@@ -311,7 +350,7 @@ public class PokeMaker {
 							"That name already exists! Would you like to overwrite it?",
 							"Confirmation", JOptionPane.YES_NO_OPTION);
 					if(result == JOptionPane.YES_OPTION) {
-						world.getConnections().save(creator.getSettings(), name); 
+						world.getConnections().save(creator.getSettings(), name);
 					}
 				}
 				else if(name.isEmpty()) {
@@ -384,7 +423,7 @@ public class PokeMaker {
 			if(isAlteringAreaSelection) {
 				return;
 			}
-			
+
 			PokeArea selected = (PokeArea) ((JComboBox<PokeArea>) e.getSource()).getSelectedItem();
 
 			PokeMaker.this.currentArea = selected;
@@ -392,22 +431,22 @@ public class PokeMaker {
 	};
 
 	private DocumentListener searchbarListener = new DocumentListener() {
-		
+
 		@Override
 		public void removeUpdate(DocumentEvent e) {
 			update(e);
 		}
-		
+
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			update(e);
 		}
-		
+
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			update(e);
 		}
-		
+
 		private void update(DocumentEvent e) {
 			try {
 				String text = e.getDocument().getText(0, e.getDocument().getLength());
@@ -416,9 +455,13 @@ public class PokeMaker {
 			catch(BadLocationException e1) {
 				e1.printStackTrace();
 			}
-			
+
 		}
 	};
+
+	public static enum DrawingMode {
+		SINGLE, GROUP;
+	}
 
 	public void setCurrentType(TileData data) {
 		this.currentTileData = data;
@@ -446,6 +489,18 @@ public class PokeMaker {
 
 	public void setCurrentTool(PaintTool currentTool) {
 		this.currentTool = currentTool;
+	}
+	
+	public StructureData getCurrentStructureData() {
+		return currentStructureData;
+	}
+	
+	public void setCurrentStructureData(StructureData currentStructureData) {
+		this.currentStructureData = currentStructureData;
+	}
+	
+	public DrawingMode getDrawingMode() {
+		return drawingMode;
 	}
 
 }
