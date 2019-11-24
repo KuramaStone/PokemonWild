@@ -12,8 +12,8 @@ import javax.swing.JToggleButton;
 
 import me.brook.PokemonCreator.graphics.style.FixedGridLayout;
 import me.brook.PokemonCreator.graphics.style.ToggleTile;
-import me.brook.PokemonCreator.world.tile.TileData;
 import me.brook.PokemonCreator.world.tile.TileType;
+import me.brook.PokemonCreator.world.tile.data.TileData;
 
 public class TileScroller extends JPanel {
 

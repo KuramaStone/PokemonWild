@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.brook.PokemonCreator.world.area.PokeArea;
+import me.brook.PokemonCreator.world.tile.data.TileData;
 
 public class StructureData {
 

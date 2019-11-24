@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
-import me.brook.PokemonCreator.world.tile.TileData;
+import me.brook.PokemonCreator.world.tile.data.TileData;
 
 public class ToggleTile extends ToggleIcon {
 

@@ -3,6 +3,8 @@ package me.brook.PokemonCreator.world.tile;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
+import me.brook.PokemonCreator.world.tile.data.TileData;
+
 public class Tile {
 	
 	public int x, y;

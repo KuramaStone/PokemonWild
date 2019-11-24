@@ -44,8 +44,8 @@ import me.brook.PokemonCreator.world.PokeWorld;
 import me.brook.PokemonCreator.world.area.PokeArea;
 import me.brook.PokemonCreator.world.tile.StructureData;
 import me.brook.PokemonCreator.world.tile.Tile;
-import me.brook.PokemonCreator.world.tile.TileData;
 import me.brook.PokemonCreator.world.tile.TileType;
+import me.brook.PokemonCreator.world.tile.data.TileData;
 
 public class PokeMaker {
 
@@ -58,7 +58,7 @@ public class PokeMaker {
 	
 	private PaintTool currentTool;
 
-	private DrawingMode drawingMode = DrawingMode.SINGLE;
+	private DrawingMode drawingMode = DrawingMode.TILE;
 	private TileData currentTileData = new TileData(TileType.GRASS, 0);
 	private StructureData currentStructureData;
 
@@ -244,10 +244,10 @@ public class PokeMaker {
 				int index = tabbedPane.getSelectedIndex();
 				
 				if(index == 0) {
-					drawingMode = DrawingMode.SINGLE;
+					drawingMode = DrawingMode.TILE;
 				}
 				else {
-					drawingMode = DrawingMode.GROUP;
+					drawingMode = DrawingMode.STRUCTURE;
 				}
 			}
 		});
@@ -460,7 +460,7 @@ public class PokeMaker {
 	};
 
 	public static enum DrawingMode {
-		SINGLE, GROUP;
+		TILE, STRUCTURE;
 	}
 
 	public void setCurrentType(TileData data) {
