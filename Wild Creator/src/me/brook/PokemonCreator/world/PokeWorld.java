@@ -33,7 +33,7 @@ public class PokeWorld {
 	}
 
 	private void updateAnimatedTiles() {
-		for(TileType type : TileType.values()) {
+		for(TileType type : creator.getTileManager().getTileTypes()) {
 			type.tickAnimation();
 		}
 

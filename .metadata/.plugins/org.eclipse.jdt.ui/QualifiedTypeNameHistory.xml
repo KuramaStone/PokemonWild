@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.io.FileWriter"/>
-<fullyQualifiedTypeName name="me.brook.PokemonCreator.world.area.PokeArea"/>
 <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
 <fullyQualifiedTypeName name="javax.swing.event.AncestorListener"/>
 <fullyQualifiedTypeName name="java.io.FileReader"/>
@@ -58,6 +56,8 @@
 <fullyQualifiedTypeName name="me.brook.PokemonCreator.world.tile.StructureData"/>
 <fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
 <fullyQualifiedTypeName name="me.brook.PokemonCreator.world.tile.TileData"/>
-<fullyQualifiedTypeName name="me.brook.PokemonCreator.world.tile.Tile"/>
 <fullyQualifiedTypeName name="java.awt.Color"/>
+<fullyQualifiedTypeName name="me.brook.PokemonCreator.world.tile.Tile"/>
+<fullyQualifiedTypeName name="me.brook.PokemonCreator.world.tile.data.TileData"/>
+<fullyQualifiedTypeName name="me.brook.PokemonCreator.world.tile.data.EventData"/>
 </qualifiedTypeNameHistroy>

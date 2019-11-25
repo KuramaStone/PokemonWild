@@ -4,62 +4,74 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.brook.PokemonCreator.toolbox.Settings;
 import me.brook.PokemonCreator.toolbox.Tools;
 import me.brook.PokemonCreator.world.yaml.ConfigReader;
 
-public enum TileType {
-
-	ERROR, GRASS, TALL_GRASS, RED_FLOWER, ORANGE_FLOWER, BLUE_FLOWER, YELLOW_FLOWER, SMALL_BUSH, LONG_BUSH, GRASS_PATH, FRAIL_ROCK,
-	// Tall shit
-	SHORT_TREE, TREE,
-	// water
-	WATER, WATER_STONE, WATER_EDGE_CORNER_LEFT, WATER_EDGE_CORNER_RIGHT, WATER_EDGE_LEFT, WATER_EDGE_RIGHT, WATER_EDGE_BOTTOM,
-	// Structures
-	POKEMART;
-
-	private static int idCount = 0;
+public class TileType {
 
 	private int id;
+	private String name;
+
 	private BufferedImage[] images;
 	private int animationCycle; // The number of ticks until it shall go to the next animation frame.
 
 	// Layer to render this tile
 	private int layer;
-	
+
 	private boolean[] collidableVariants;
 	private boolean isAnimated;
 	private Rectangle collidingArea;
 	private int width, height;
 	private Point start, end;
-	
+
 	private boolean isStructure;
 	private BufferedImage fullIcon;
 	private int structureWidth, structureHeight;
-	
+
 	private int currentFrame = 0;
 	private int ticks = 0;
 
-	public static void loadTileData(Settings settings) throws IOException {
+	public static List<TileType> loadTileData(Settings settings) throws IOException {
 		ConfigReader config = new ConfigReader(settings, "res\\tiles\\yml\\basic.yml");
 
 		// Load 1x1
 		BufferedImage sheet = Tools.readImage(settings, "res\\tiles\\" + config.get("textures.1x1.info.file"));
 
+		int id = 0;
+		List<TileType> tileTypes = new ArrayList<>();
 		for(Object obj : config.getKeys("textures.1x1")) {
 			String str = obj.toString();
 
 			if(!str.equals("info")) {
-				TileType.valueOf(str.toUpperCase()).loadBasicTile(config, sheet);
+				TileType type = new TileType();
+				type.loadBasicTile(config, sheet, str, id++);
+				tileTypes.add(type);
 			}
 		}
+
+		// Load bulk tiles
+//		sheet = Tools.readImage(settings, "res\\tiles\\" + config.get("textures.bulk.info.file"));
+//		int size = 16;
+//		for(int x = 0; x < sheet.getWidth(); x += size) {
+//			for(int y = 0; y < sheet.getHeight(); y += size) {
+//
+//				TileType type = new TileType();
+//				type.loadBulkTile(config, sheet.getSubimage(x, y, size, size), String.valueOf(id), id++, size);
+//				tileTypes.add(type);
+//			}
+//		}
 
 		for(Object obj : config.getKeys("textures.varied")) {
 			String str = obj.toString();
 
 			if(!str.equals("info")) {
-				TileType.valueOf(str.toUpperCase()).loadVariedTile(config, sheet);
+				TileType type = new TileType();
+				type.loadVariedTile(config, sheet, str, id++);
+				tileTypes.add(type);
 			}
 		}
 
@@ -68,17 +80,42 @@ public enum TileType {
 			String str = obj.toString();
 
 			if(!str.equals("info")) {
-				TileType.valueOf(str.toUpperCase()).loadStructureTiles(config, sheet);
+				TileType type = new TileType();
+				type.loadStructureTiles(config, sheet, str, id++);
+				tileTypes.add(type);
 			}
 		}
 
+		return tileTypes;
 	}
 
-	private void loadStructureTiles(ConfigReader config, BufferedImage sheet) {
-		id = idCount++;
+	private void loadBulkTile(ConfigReader config, BufferedImage image, String name, int id, int size) {
+		this.id = id;
+		this.name = name;
+
+		images = new BufferedImage[0];
+		images[0] = image;
+
+		isStructure = false;
+		layer = 0;
+		animationCycle = 0;
+
+		width = 1;
+		height = 1;
+
+		collidableVariants = new boolean[1];
+		for(int j = 0; j < collidableVariants.length; j++) {
+			collidableVariants[j] = true;
+		}
+
+		collidingArea = new Rectangle(0, 0, width, height);
+	}
+
+	private void loadStructureTiles(ConfigReader config, BufferedImage sheet, String name, int id) {
+		this.id = id;
+		this.name = name;
 
 		isStructure = true;
-		String name = this.toString().toLowerCase();
 		config.setSection("textures.structures." + name);
 
 		layer = config.getInt("layer");
@@ -93,13 +130,13 @@ public enum TileType {
 
 		structureWidth = end.x - start.x + 1;
 		structureHeight = end.y - start.y + 1;
-		
-		
+
 		final int size = 16;
 		int variants = (end.x - start.x + 1) * (end.y - start.y + 1);
 		images = new BufferedImage[variants];
 		int i = 0;
-		fullIcon = sheet.getSubimage(start.x * size, start.y * size, (end.x - start.x + 1) * size, (end.y - start.y + 1) * size);
+		fullIcon = sheet.getSubimage(start.x * size, start.y * size, (end.x - start.x + 1) * size,
+				(end.y - start.y + 1) * size);
 		for(int y = start.y; y <= end.y; y++) {
 			for(int x = start.x; x <= end.x; x++) {
 				int tx = x * size;
@@ -135,17 +172,17 @@ public enum TileType {
 			for(int j : config.getIntList("collisions.nonCollidableTiles")) {
 				collidableVariants[j] = false;
 			}
-			
+
 			collidingArea = new Rectangle(0, 0, 1, 1);
 		}
 
 		config.setSection("");
 	}
 
-	private void loadVariedTile(ConfigReader config, BufferedImage sheet) {
-		id = idCount++;
+	private void loadVariedTile(ConfigReader config, BufferedImage sheet, String name, int id) {
+		this.id = id;
+		this.name = name;
 
-		String name = this.toString().toLowerCase();
 		config.setSection("textures.varied." + name);
 
 		isAnimated = config.getBoolean("animated");
@@ -184,15 +221,16 @@ public enum TileType {
 		config.setSection("");
 	}
 
-	private void loadBasicTile(ConfigReader config, BufferedImage sheet) {
+	private void loadBasicTile(ConfigReader config, BufferedImage sheet, String name, int id) {
+		this.id = id;
+		this.name = name;
+
 		// We load the tile data now from the basic.yml
-		String name = this.toString().toLowerCase();
 		int size = 16;
 		config.setSection("textures.1x1." + name);
 		width = 1;
 		height = 1;
-		
-		id = idCount++;
+
 		int variants = config.getInt("variants");
 		images = new BufferedImage[variants];
 
@@ -203,7 +241,7 @@ public enum TileType {
 			for(int j = 0; j < collidableVariants.length; j++) {
 				collidableVariants[j] = true;
 			}
-			
+
 			collidingArea = new Rectangle(0, 0, width, height);
 		}
 		isAnimated = config.getBoolean("animated");
@@ -318,19 +356,19 @@ public enum TileType {
 	public int getLayer() {
 		return layer;
 	}
-	
+
 	public boolean isStructure() {
 		return isStructure;
 	}
-	
+
 	public BufferedImage getFullIcon() {
 		return fullIcon;
 	}
-	
+
 	public Point getStart() {
 		return start;
 	}
-	
+
 	public Point getEnd() {
 		return end;
 	}
@@ -338,9 +376,13 @@ public enum TileType {
 	public int getStructureWidth() {
 		return structureWidth;
 	}
-	
+
 	public int getStructureHeight() {
 		return structureHeight;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

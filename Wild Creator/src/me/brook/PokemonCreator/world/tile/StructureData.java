@@ -33,16 +33,33 @@ public class StructureData {
 		return type;
 	}
 
-	public void addTo(PokeArea currentArea, Point tile) {
+	public void addTo(PokeArea area, Point origin) {
 		int width = this.getType().getStructureWidth();
 
 		for(int i = 0; i < this.getTileData().size(); i++) {
 			TileData data = this.getTileData().get(i);
-			int x = (i % width) + tile.x;
-			int y = (i / width) + tile.y;
+			int x = (i % width) + origin.x;
+			int y = (i / width) + origin.y;
 			Tile t = new Tile(x, y, data);
 
-			currentArea.add(t);
+			area.add(t);
+		}
+	}
+
+	public void removeFrom(PokeArea area, Point origin) {
+		int width = this.getType().getStructureWidth();
+
+		for(int i = 0; i < this.getTileData().size(); i++) {
+			int x = (i % width) + origin.x;
+			int y = (i / width) + origin.y;
+			List<Tile> tiles = area.getTilesAt(new Point(x, y));
+
+			TileData data = getTileData().get(i);
+			for(Tile tile : tiles) {
+				if(tile.getData().equals(data)) {
+					area.remove(tile);
+				}
+			}
 		}
 	}
 

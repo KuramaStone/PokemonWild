@@ -11,7 +11,7 @@ import me.brook.PokemonCreator.graphics.PokeWindow;
 import me.brook.PokemonCreator.input.PokeMaker;
 import me.brook.PokemonCreator.toolbox.Settings;
 import me.brook.PokemonCreator.world.PokeWorld;
-import me.brook.PokemonCreator.world.tile.TileType;
+import me.brook.PokemonCreator.world.tile.TileManager;
 
 public class PokemonCreator implements Runnable {
 
@@ -21,13 +21,14 @@ public class PokemonCreator implements Runnable {
 	private PokeWorld world;
 	private PokeWindow window;
 	private PokeDrawer drawer;
+	private TileManager tileManager;
 	
 	private Settings settings;
 
 	public PokemonCreator() throws IOException {
 		loadSettings();
 		drawer = new PokeDrawer(this, PokeWindow.SIZE);
-		TileType.loadTileData(settings);
+		tileManager = new TileManager(this);
 		world = new PokeWorld(this);
 		maker = new PokeMaker(this);
 		window = new PokeWindow(this);
@@ -92,6 +93,10 @@ public class PokemonCreator implements Runnable {
 	
 	public Settings getSettings() {
 		return settings;
+	}
+	
+	public TileManager getTileManager() {
+		return tileManager;
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
+import me.brook.PokemonCreator.PokemonCreator;
 import me.brook.PokemonCreator.graphics.style.FixedGridLayout;
 import me.brook.PokemonCreator.graphics.style.ToggleTile;
 import me.brook.PokemonCreator.world.tile.TileType;
@@ -19,12 +20,14 @@ public class TileScroller extends JPanel {
 
 	private static final long serialVersionUID = 2040291925460760780L;
 
+	private PokemonCreator creator;
 	private PokeMaker maker;
 
 	private List<TileToggle> tiles;
 
-	public TileScroller(PokeMaker maker) {
-		this.maker = maker;
+	public TileScroller(PokemonCreator creator) {
+		this.creator = creator;
+		this.maker = creator.getMaker();
 		createIcons();
 		setIconsInPanel("");
 	}
@@ -33,7 +36,7 @@ public class TileScroller extends JPanel {
 		tiles.forEach(t -> this.remove(t.button));
 
 		for(TileToggle tt : tiles) {
-			if(tt.getData().getType().toString().toLowerCase().contains(string.toLowerCase())) {
+			if(tt.getData().getType().getName().toLowerCase().contains(string.toLowerCase())) {
 				this.add(tt.button);
 			}
 		}
@@ -46,7 +49,7 @@ public class TileScroller extends JPanel {
 
 		int columns = 5;
 		int total = 0;
-		for(TileType type : TileType.values()) {
+		for(TileType type : creator.getTileManager().getTileTypes()) {
 			total += type.isAnimated() ? 1 : type.getImages().length;
 		}
 		int rows = total / columns + 1;
@@ -54,7 +57,7 @@ public class TileScroller extends JPanel {
 		int size = 60;
 		this.setLayout(new FixedGridLayout(columns, rows, size, size));
 
-		for(TileType type : TileType.values()) {
+		for(TileType type : creator.getTileManager().getTileTypes()) {
 			for(int variant = 0; variant < (type.isAnimated() ? 1 : type.getImages().length); variant++) {
 				BufferedImage image = type.getImages()[variant];
 				TileData data = new TileData(type, variant);
@@ -66,6 +69,7 @@ public class TileScroller extends JPanel {
 				icon.addActionListener(getTileChanger(data));
 				icon.setFocusable(false);
 				icon.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
+				icon.setToolTipText(data.getType().getName());
 
 				tiles.add(new TileToggle(icon, data));
 			}
@@ -97,8 +101,6 @@ public class TileScroller extends JPanel {
 		public TileToggle(JToggleButton button, TileData data) {
 			this.button = button;
 			this.data = data;
-			
-			button.setToolTipText(data.getType().toString());
 		}
 
 		public JToggleButton getButton() {

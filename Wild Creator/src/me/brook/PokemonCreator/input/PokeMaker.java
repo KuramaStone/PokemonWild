@@ -34,8 +34,8 @@ import javax.swing.text.BadLocationException;
 
 import me.brook.PokemonCreator.PokemonCreator;
 import me.brook.PokemonCreator.graphics.PokeDrawer;
-import me.brook.PokemonCreator.input.tool.PaintPanel;
-import me.brook.PokemonCreator.input.tool.PaintTool;
+import me.brook.PokemonCreator.input.painting.PaintPanel;
+import me.brook.PokemonCreator.input.painting.PaintTool;
 import me.brook.PokemonCreator.toolbox.RequestFocusListener;
 import me.brook.PokemonCreator.toolbox.Tools;
 import me.brook.PokemonCreator.world.PokeConnection;
@@ -44,7 +44,6 @@ import me.brook.PokemonCreator.world.PokeWorld;
 import me.brook.PokemonCreator.world.area.PokeArea;
 import me.brook.PokemonCreator.world.tile.StructureData;
 import me.brook.PokemonCreator.world.tile.Tile;
-import me.brook.PokemonCreator.world.tile.TileType;
 import me.brook.PokemonCreator.world.tile.data.TileData;
 
 public class PokeMaker {
@@ -59,7 +58,7 @@ public class PokeMaker {
 	private PaintTool currentTool;
 
 	private DrawingMode drawingMode = DrawingMode.TILE;
-	private TileData currentTileData = new TileData(TileType.GRASS, 0);
+	private TileData currentTileData;
 	private StructureData currentStructureData;
 
 	private PokeArea currentArea;
@@ -69,6 +68,8 @@ public class PokeMaker {
 
 	public PokeMaker(PokemonCreator creator) {
 		this.creator = creator;
+		
+		currentTileData = new TileData(creator.getTileManager().getTileByName("GRASS"), 0);
 		world = creator.getWorld();
 		drawer = creator.getDrawer();
 	}
@@ -237,6 +238,7 @@ public class PokeMaker {
 		options.add(searchbar, gbc);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.setFocusable(false);
 		tabbedPane.addChangeListener(new ChangeListener() {
 			
 			@Override
@@ -253,7 +255,7 @@ public class PokeMaker {
 		});
 
 		JPanel modeIndividualTile = new JPanel();
-		JScrollPane tileSelector = new JScrollPane(tileScroller = new TileScroller(this),
+		JScrollPane tileSelector = new JScrollPane(tileScroller = new TileScroller(creator),
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tileSelector.getVerticalScrollBar().setUnitIncrement(8);
@@ -261,7 +263,7 @@ public class PokeMaker {
 		tileSelector.setPreferredSize(new Dimension(320, 300));
 
 		JPanel modeStructure = new JPanel();
-		JScrollPane structureSelector = new JScrollPane(structureScroller = new StructureScroller(this),
+		JScrollPane structureSelector = new JScrollPane(structureScroller = new StructureScroller(creator),
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		structureSelector.getVerticalScrollBar().setUnitIncrement(8);
@@ -501,6 +503,10 @@ public class PokeMaker {
 	
 	public DrawingMode getDrawingMode() {
 		return drawingMode;
+	}
+	
+	public StructureScroller getStructureScroller() {
+		return structureScroller;
 	}
 
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/Pokemon Wild/src/me/brook/PokemonWild/Start.java"/>
+<listEntry value="/Wild Creator/src/me/brook/PokemonCreator/Start.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="me.brook.PokemonWild.Start"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="Pokemon Wild"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="me.brook.PokemonCreator.Start"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="Wild Creator"/>
 </launchConfiguration>

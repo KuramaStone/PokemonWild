@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import me.brook.PokemonCreator.PokemonCreator;
-import me.brook.PokemonCreator.input.tool.PaintTool;
+import me.brook.PokemonCreator.input.painting.PaintTool;
 import me.brook.PokemonCreator.world.PokeWorld;
 import me.brook.PokemonCreator.world.area.PokeArea;
 import me.brook.PokemonCreator.world.tile.Tile;

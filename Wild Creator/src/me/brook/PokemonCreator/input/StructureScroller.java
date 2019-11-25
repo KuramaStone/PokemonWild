@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
+import me.brook.PokemonCreator.PokemonCreator;
 import me.brook.PokemonCreator.graphics.style.FixedGridLayout;
 import me.brook.PokemonCreator.graphics.style.ToggleIcon;
 import me.brook.PokemonCreator.world.tile.StructureData;
@@ -17,12 +18,14 @@ public class StructureScroller extends JPanel {
 
 	private static final long serialVersionUID = 1275918524454747478L;
 
+	private PokemonCreator creator;
 	private PokeMaker maker;
 
 	private List<StructureIcon> icons;
 
-	public StructureScroller(PokeMaker maker) {
-		this.maker = maker;
+	public StructureScroller(PokemonCreator creator) {
+		this.creator = creator;
+		this.maker = creator.getMaker();
 
 		addIcons();
 		setIconsInPanel("");
@@ -45,15 +48,15 @@ public class StructureScroller extends JPanel {
 
 		int columns = 2;
 		int total = 0;
-		for(TileType type : TileType.values()) {
+		for(TileType type : creator.getTileManager().getTileTypes()) {
 			total += type.isStructure() ? 1 : 0;
 		}
 		int rows = total / columns + 1;
 
-		int size = 120;
+		int size = 150;
 		this.setLayout(new FixedGridLayout(columns, rows, size, size));
 		
-		for(TileType type : TileType.values()) {
+		for(TileType type : creator.getTileManager().getTileTypes()) {
 			if(type.isStructure()) {
 				
 				StructureIcon icon = new StructureIcon(type);
@@ -77,6 +80,7 @@ public class StructureScroller extends JPanel {
 			structureData = new StructureData(type);
 			
 			button = new JToggleButton();
+			button.setFocusable(false);
 			button.setUI(new ToggleIcon(type.getFullIcon()));
 			button.addActionListener(new ActionListener() {
 				

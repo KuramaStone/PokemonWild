@@ -1,4 +1,7 @@
 textures:
+  bulk:
+    info: 
+      file: bulk.png
   structures:
     info:
       file: buildings.png
@@ -14,6 +17,42 @@ textures:
         - 1
         - 2
         - 3
+    pokecenter:
+      layer: 10
+      location:
+        start: 4,0
+        end: 8,4
+      collisions:
+        collidable: true 
+        nonCollidableTiles:
+        - 0
+        - 1
+        - 2
+        - 3
+    rock:
+      layer: 10
+      variants: 2
+      location:
+        start: 0,5
+        end: 2,7
+      collisions:
+        collidable: true 
+        nonCollidableTiles:
+        - 0
+        - 1
+        - 2
+    light_rock:
+      layer: 10
+      variants: 2
+      location:
+        start: 3,5
+        end: 5,7
+      collisions:
+        collidable: true 
+        nonCollidableTiles:
+        - 0
+        - 1
+        - 2
 
   varied:
     info:
@@ -42,9 +81,77 @@ textures:
         collidable: true
         width: 2
         height: 2
+      
   1x1:
     info:
       file: basic.png
+      
+    error:
+      collidable: true
+      variants: 1
+      location:
+        start: 31,0
+    grass:
+      variants: 5
+      location:
+        start: 0,0
+    tall_grass:
+      layer: 5
+      variants: 1
+      location:
+        start: 0,1
+    ledge:
+      collidable: true
+      layer: 1
+      location:
+        start: 0,13
+        end: 4,15
+    light_ledge:
+      collidable: true
+      layer: 1
+      variants: 2
+      location:
+        start: 4,13
+        end: 8,15
+    cave_door:
+      layer: 11
+      variants: 2
+      location:
+        start: 2,19
+        
+    red_flower:
+      animated: true
+      cycle: 15
+      variants: 5
+      location:
+        start: 0,2
+    orange_flower:
+      variants: 1
+      location:
+        start: 0,3
+    blue_flower:
+      variants: 1
+      location:
+        start: 0,4
+    yellow_flower:
+      variants: 1
+      location:
+        start: 0,5
+    small_bush:
+      collidable: true
+      variants: 4
+      location:
+        start: 0,6
+    long_bush:
+      collidable: true
+      variants: 3
+      location:
+        start: 0,7
+    grass_path:
+      variants: 1
+      location:
+        start: 0,8
+        end: 11,9   
     water:
       layer: 5
       animated: true
@@ -106,53 +213,4 @@ textures:
       variants: 1
       location:
         start: 0,50
-      
-    error:
-      collidable: true
-      variants: 1
-      location:
-        start: 31,0
-    grass:
-      variants: 5
-      location:
-        start: 0,0
-    tall_grass:
-      layer: 5
-      variants: 1
-      location:
-        start: 0,1
-        
-    red_flower:
-      animated: true
-      cycle: 15
-      variants: 5
-      location:
-        start: 0,2
-    orange_flower:
-      variants: 1
-      location:
-        start: 0,3
-    blue_flower:
-      variants: 1
-      location:
-        start: 0,4
-    yellow_flower:
-      variants: 1
-      location:
-        start: 0,5
-    small_bush:
-      collidable: true
-      variants: 4
-      location:
-        start: 0,6
-    long_bush:
-      collidable: true
-      variants: 3
-      location:
-        start: 0,7
-    grass_path:
-      variants: 1
-      location:
-        start: 0,8
-        end: 11,9   
     
